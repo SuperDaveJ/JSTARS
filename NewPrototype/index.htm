@@ -1,0 +1,62 @@
+<html>
+<head>
+<title>Main</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<script language="JavaScript" type="text/JavaScript">
+<!--
+var userName;
+var lesson = "Prototype";
+var audioState;
+//default to ON
+audioState = true;
+
+var strIn = location.search;
+
+//Get rid of the question mark at the beginning
+strIn = unescape(strIn.substring(1, strIn.length));
+
+function getUsername() {
+	arrQuery = strIn.split("=")
+	return arrQuery[1];
+}
+
+function processQuerry() {
+	if (strIn.indexOf("&")) {
+		arrQuery = new Array();
+		arrQuery = strIn.split("&");
+		nQuerry = arrQuery.length;
+		//alert("Number of Querries = " + nQuerry + "\r" + strIn);
+		if (nQuerry == 3) {
+			nCorrect = arrQuery[0].substring(arrQuery[0].indexOf("=")+1,arrQuery[0].length); 	//nCorrect = questions answered correctly
+			nTotal = arrQuery[1].substring(arrQuery[1].indexOf("=")+1,arrQuery[1].length); 	//nCorrect = questions answered correctly
+			accessCode = arrQuery[2].substring(arrQuery[2].indexOf("=")+1,arrQuery[2].length); 	//nCorrect = questions answered correctly
+			if (password == accessCode) {
+				// enable Next button
+				navEnabled = true;
+				writeReport();
+			} else
+				alert("Your access code is incorrect.\rTry again.")
+		} else if (nQuerry == 2) {
+			//eval(arrQuery[0]); 	//nCorrect = questions answered correctly
+			//eval(arrQuery[1]);	//nTotal = total number of questions
+			nCorrect = arrQuery[0].substring(arrQuery[0].indexOf("=")+1,arrQuery[0].length); 	//nCorrect = questions answered correctly
+			nTotal = arrQuery[1].substring(arrQuery[1].indexOf("=")+1,arrQuery[1].length); 	//nCorrect = questions answered correctly
+		} else {
+			alert("Error occurred.")
+		}
+	}	
+}
+
+userName = getUsername();
+//alert("Your name is: " + userName)
+
+</script>
+
+</head>
+
+<frameset rows="*,100%" frameborder="NO" border="0" framespacing="0">
+  <frame src="empty.htm" name="topEmpty" scrolling="NO" noresize >
+  <frame src="JStarL106.htm" name="content" scrolling="NO">
+</frameset>
+<noframes></noframes>
+</html>

@@ -1,0 +1,509 @@
+<html>
+<head>
+<title>Lesson 3: Introduction to Joint STARS - Part 3</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<script language="JavaScript" type="text/JavaScript">
+<!--
+//prototype function
+function QuitIt(){
+	if (confirm("Are you sure you want to exit?") == true)
+		window.close()
+}
+function refresh()
+{
+location.reload()
+}
+function FDK_loadFlashMovie(ID,PicPath,Current){
+  	document.images.Gswitch.src = PicPath;
+}
+//-------------------------------------------------------------------
+
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+
+function MM_showHideLayers() { //v6.0
+  var i,p,v,obj,args=MM_showHideLayers.arguments;
+  for (i=0; i<(args.length-2); i+=3) if ((obj=MM_findObj(args[i]))!=null) { v=args[i+2];
+    if (obj.style) { obj=obj.style; v=(v=='show')?'visible':(v=='hide')?'hidden':v; }
+    obj.visibility=v; }
+}
+
+
+function MM_openBrWindow(theURL,winName,features) { //v2.0
+  window.open(theURL,winName,features);
+}
+
+function MM_controlShockwave(objStr,x,cmdName,frameNum) { //v3.0
+  var obj=MM_findObj(objStr);
+  if (obj) eval('obj.'+cmdName+'('+((cmdName=='GotoFrame')?frameNum:'')+')');
+}
+
+function setCookie(name, value, expire){
+	document.cookie = name + "=" + escape(value) + ((expire == null)?"":("; expires =" + expire.toGMTString()))
+	}
+function getCookie(Name) {
+	var Mysearch = Name + "=";
+	if (document.cookie.length > 0) {
+		offset = document.cookie.indexOf(Mysearch);
+	if (offset != -1){
+		offset += Mysearch.length;
+		end = document.cookie.indexOf(";", offset);
+	if (end == -1)
+		end = document.cookie.length;
+	return unescape(document.cookie.substring(offset, end));
+	}
+	}
+}
+
+function showResult(){
+
+var audioResult = getCookie("audio");
+switch (audioResult) {
+	case "1":
+		MM_showHideLayers('LAudio','','hide');
+		MM_timelineGoto('Timeline1','1');
+		break;
+	case "0":
+		MM_showHideLayers('LAudio','','show');
+		MM_timelineGoto('Timeline1','2');
+		break;
+	case"":
+		setCookie('audio', 1 );
+		MM_showHideLayers('LAudio','','show');
+		MM_timelineGoto('Timeline1','1');
+		break;
+		}
+}
+
+function MM_timelineGoto(tmLnName, fNew, numGotos) { //v2.0
+  //Copyright 1997, 2000 Macromedia, Inc. All rights reserved.
+  var i,j,tmLn,props,keyFrm,sprite,numKeyFr,firstKeyFr,lastKeyFr,propNum,theObj;
+  if (document.MM_Time == null) MM_initTimelines(); //if *very* 1st time
+  tmLn = document.MM_Time[tmLnName];
+  if (numGotos != null)
+    if (tmLn.gotoCount == null) tmLn.gotoCount = 1;
+    else if (tmLn.gotoCount++ >= numGotos) {tmLn.gotoCount=0; return}
+  jmpFwd = (fNew > tmLn.curFrame);
+  for (i = 0; i < tmLn.length; i++) {
+    sprite = (jmpFwd)? tmLn[i] : tmLn[(tmLn.length-1)-i]; //count bkwds if jumping back
+    if (sprite.charAt(0) == "s") {
+      numKeyFr = sprite.keyFrames.length;
+      firstKeyFr = sprite.keyFrames[0];
+      lastKeyFr = sprite.keyFrames[numKeyFr - 1];
+      if ((jmpFwd && fNew<firstKeyFr) || (!jmpFwd && lastKeyFr<fNew)) continue; //skip if untouchd
+      for (keyFrm=1; keyFrm<numKeyFr && fNew>=sprite.keyFrames[keyFrm]; keyFrm++);
+      for (j=0; j<sprite.values.length; j++) {
+        props = sprite.values[j];
+        if (numKeyFr == props.length) propNum = keyFrm-1 //keyframes only
+        else propNum = Math.min(Math.max(0,fNew-firstKeyFr),props.length-1); //or keep in legal range
+        if (sprite.obj != null) {
+          if (props.prop2 == null) sprite.obj[props.prop] = props[propNum];
+          else        sprite.obj[props.prop2][props.prop] = props[propNum];
+      } }
+    } else if (sprite.charAt(0)=='b' && fNew == sprite.frame) eval(sprite.value);
+  }
+  tmLn.curFrame = fNew;
+  if (tmLn.ID == 0) eval('MM_timelinePlay(tmLnName)');
+}
+
+function MM_setTextOfLayer(objName,x,newText) { //v4.01
+  if ((obj=MM_findObj(objName))!=null) with (obj)
+    if (document.layers) {document.write(unescape(newText)); document.close();}
+    else innerHTML = unescape(newText);
+}
+
+//-------------------------------------------------------------------
+var oGoto = window.createPopup();
+function gotoPopup()
+{
+    oGoto.document.body.innerHTML = oReferenceHTML.innerHTML; 
+	//the dimensions need to match that of scroll box layer
+	//the position is relative to btnGoto object
+    oGoto.show(-50, -211, 150, 200, btnGoto);
+}
+
+//-------------------------------------------------------------------
+
+function MM_initTimelines() { //v4.0
+    //MM_initTimelines() Copyright 1997 Macromedia, Inc. All rights reserved.
+    var ns = navigator.appName == "Netscape";
+    var ns4 = (ns && parseInt(navigator.appVersion) == 4);
+    var ns5 = (ns && parseInt(navigator.appVersion) > 4);
+    document.MM_Time = new Array(1);
+    document.MM_Time[0] = new Array(2);
+    document.MM_Time["Timeline1"] = document.MM_Time[0];
+    document.MM_Time[0].MM_Name = "Timeline1";
+    document.MM_Time[0].fps = 15;
+    document.MM_Time[0][0] = new String("behavior");
+    document.MM_Time[0][0].frame = 1;
+    document.MM_Time[0][0].value = "MM_controlShockwave('FAudio','','GotoFrame','0')";
+    document.MM_Time[0][1] = new String("behavior");
+    document.MM_Time[0][1].frame = 2;
+    document.MM_Time[0][1].value = "MM_controlShockwave('FAudio','','GotoFrame','1')";
+    document.MM_Time[0].lastFrame = 2;
+    for (i=0; i<document.MM_Time.length; i++) {
+        document.MM_Time[i].ID = null;
+        document.MM_Time[i].curFrame = 0;
+        document.MM_Time[i].delay = 1000/document.MM_Time[i].fps;
+    }
+}
+//-->
+</script>
+
+
+<link href="../System/JStars.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="#403F56" background="../System/background-main.jpg" link="#FDF543" vlink="#A79DDE" alink="#FED803" leftmargin="0" topmargin="0" onLoad="showResult();MM_preloadImages('../System/glossary_2.jpg','../System/audio2_1.jpg','../System/help_1.jpg','../System/audio_1.jpg','../System/logout_2.jpg','../System/menu_2.jpg','../System/replay_2.jpg','../System/back_2.jpg','../System/next_2.jpg','../System/goto_2.jpg')">
+<table width="800" height="550" border="0" cellpadding="0" cellspacing="0">
+  <tr> 
+    <td height="48" colspan="5" align="left" valign="top">&nbsp;</td>
+  </tr>
+  <tr> 
+    <td width="31" height="58" align="left" valign="middle"> 
+      <p class="pageTitle">&nbsp;</p></td>
+    <td height="58" colspan="2" align="left" valign="middle" class="pageTitle">Summary
+      - Mission Crew</td>
+    <td width="450" rowspan="2" align="center" valign="middle"> 
+      <div align="center"> 
+        <p class="Prompt"><img src="Images/342410.jpg" width="362" height="426" border="0"></p>
+      </div></td>
+    <td width="19" rowspan="2" align="center" valign="middle">&nbsp;</td>
+  </tr>
+  <tr> 
+    <td width="31" height="394" align="left" valign="top"> 
+      <p class="Paragraph">&nbsp;</p></td>
+    <td width="290" align="left" valign="top"> <p class="Paragraph"> The System
+        Management Section is responsible to the MCC for the Prime Mission Equipment
+        (PME (i.e., the Radar, O&amp;C, and Communications subsystems)) initialization,
+        operation, configuration, monitoring, and in-flight maintenance on the
+        E-8 aircraft.</p>
+      <p class="Paragraph">The System Management Section is made up of the Communication
+    System Technician and the Airborne Mission System Specialist. These are enlisted
+      aircrew positions.</p>      
+      <p class="Paragraph">&nbsp;</p></td>
+    <td width="10" align="left" valign="top">&nbsp;</td>
+  </tr>
+  <tr> 
+    <td height="50" colspan="5" align="left" valign="bottom">&nbsp;</td>
+  </tr>
+</table>
+<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" name="FAudio" width="22" height="17" id="FAudio">
+  <param name="movie" value="Audios/342410.swf">
+  <param name="quality" value="high"><param name="LOOP" value="false"><param name="PLAY" value="false">
+<embed src="Audios/342410.swf" width="22" height="17" loop="false" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" play="false" name="FAudio" swliveconnect="true"></embed></object>
+<div id="LnavBar" style="position:absolute; width:326; height:36px; z-index:1; left: 326; top: 515;"> 
+  <table width="456" height="24" border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td width="69" align="center" valign="top"><a href="#" onClick="QuitIt()" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('logout','','../System/logout_2.jpg',1)"><img src="../System/logout_0.jpg" alt="Log out the lesson" name="logout" width="57" height="24" border="0"></a> 
+      </td>
+      <td width="70" align="center" valign="top"> <a href="#" onClick="MM_openBrWindow('../Glossary.htm','','scrollbars=yes,width=800,height=550')" 
+												onMouseOver="MM_swapImage('glossary','','../System/glossary_2.jpg',1)" 
+	  											onMouseOut="MM_swapImgRestore()"><img src="../System/glossary_0.jpg" alt="Glossary" name="glossary" width="57" height="24" border="0" id="glossary"></a></td>
+      <td width="70" align="center" valign="top"><img src="../System/remarks_3.jpg" name="remark" width="57" height="24" border="0" id="remark"></td>
+      <td width="70" align="center" valign="top"><span id="btnGoto"><a href="#" onClick="gotoPopup()" onMouseOver="MM_swapImage('goto','','../System/goto_2.jpg',1)" onMouseOut="MM_swapImgRestore()"><img src="../System/goto_0.jpg" alt="Go to a page" name="goto" width="57" height="24" border="0"></a></span></td>
+      <td width="70" align="center" valign="top"><a href="../LessonMenu01.htm" 
+	  	onMouseOver="MM_swapImage('Menu','','../System/menu_2.jpg',1)" onMouseOut="MM_swapImgRestore()"> 
+        <img src="../System/menu_0.jpg" alt="Go to Main Menu" name="Menu" width="57" height="24" border="0"></a></td>
+      <td width="70" align="center" valign="top"><a href="352540.htm" onMouseOver="MM_swapImage('Prev','','../System/back_2.jpg',1)" onMouseOut="MM_swapImgRestore()"><img src="../System/back_0.jpg" alt="Go to previouse page" name="Prev" width="57" height="24" border="0"></a></td>
+      <td width="75" align="center" valign="top"><a href="#" onClick="refresh()" onMouseOver="MM_swapImage('replay','','../System/replay_2.jpg',1)" onMouseOut="MM_swapImgRestore()"><img src="../System/replay_0.jpg" alt="Replay the current page" name="replay" width="57" height="24" border="0" id="replay"></a></td>
+      <td width="66" align="center" valign="top"><a href="352560.htm" onMouseOver="MM_swapImage('Next','','../System/next_2.jpg',1)" onMouseOut="MM_swapImgRestore()"><img src="../System/next_0.jpg" alt="Go to next page" name="Next" width="57" height="24" border="0" id="Next"></a></td>
+    </tr>
+  </table>
+</div>
+<div id="Lprompt" style="position:absolute; width:270px; height:30px; z-index:2; left: 4px; top: 501px;"> 
+  <div align="left"></div>
+  <table width="268" border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td width="27" height="38" align="center" valign="middle" class="mapTopic"><a href="#" onClick="MM_openBrWindow('../Help.htm','','width=800,height=550')" onMouseOver="MM_swapImage('Image18','','../System/help_1.jpg',1)" onMouseOut="MM_swapImgRestore()"><img src="../System/help_0.jpg" name="Image18" width="19" height="17" border="0"></a></td>
+      <td width="333" align="center" valign="middle" class="Prompt">Click Next 
+        to continue.</td>
+    </tr>
+  </table>
+</div>
+<div id="LPageNum" style="position:absolute; width:132px; height:14px; z-index:3; left: 663px; top: 17px;" class="pageNumber"> 
+  <table width="132" border="0" cellspacing="0" cellpadding="0">
+    <tr> 
+      <td width="118" class="pageNumber">Page 55 of 80</td>
+      <td width="22"><a href="#" onClick = "setCookie('audio', 0 );showResult()" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image14','','../System/audio2_1.jpg',1)"><img src="../System/audio2_0.jpg" alt="Turns audio off" name="Image14" width="30" height="22" border="0"></a></td>
+    </tr>
+  </table>
+</div>
+<div id="sectionTitle" style="position:absolute; width:315px; height:17px; z-index:4; left: 46px; top: 13px;">
+  <p class="sectionTitle">Section 5: Summary</p>
+</div>
+<div id="LAudio" style="position:absolute; width:28px; height:24px; z-index:9; left: 762; top: 17; visibility: hidden;"><a href="#" onClick = "setCookie('audio', 1 );showResult()" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image15','','../System/audio_1.jpg',1)"><img src="../System/audio_0.jpg" alt="Turns audio on" name="Image15" width="30" height="22" border="0"></a></div>
+<map name="Map">
+  <area shape="rect" coords="13,307,43,322" href="#" onClick="FDK_loadFlashMovie('Gswitch','Images/132030a.jpg','2'); MM_setTextOfLayer('popupInfo','','%3Cp class=%22Paragraph%22%3EThe OFF position completely de-energizes the system and overrides all other switch positions, closing the OVBD, RECIRC, and purge valves.');MM_showHideLayers('popupInfo','','show','Lswitch','','show')">
+  <area shape="rect" coords="11,271,44,289" href="#" onClick="FDK_loadFlashMovie('Gswitch','Images/132030c.jpg','2'); MM_setTextOfLayer('popupInfo','','%3Cp class=%22Paragraph%22%3EThe OVRD position opens the OVBD valve, closes the RECIRC valve, and places the draw thru fan to HIGH.  WARNING: setting the Draw Thru system control switch to OVRD in flight will cause the OVBD valve to open resulting in a loss of cabin pressurization.   ');MM_showHideLayers('popupInfo','','show','Lswitch','','show')">
+  <area shape="rect" coords="13,290,43,305" href="#" onClick="MM_setTextOfLayer('popupInfo','','%3Cp class=%22Paragraph%22%3EThe NORM position is used in conjunction with the O&amp;C ELCU %22ON%22, O&amp;C subsystem power switch on the PIC Jbox %22ON%22, and the ground maintenance cooling panel OWS SPUR DUCT VAVLES OPEN/NORM switch %22NORM%22 to provide normal operation of the system.   ');MM_showHideLayers('popupInfo','','show','Lswitch','','hide')">
+</map>
+<!-- Lesson Reference -->
+<div id="oReferenceHTML" style="position:absolute; top:0; left:800;display:none;">
+  <!-- Scroll box -->
+  <div style="position:absolute; top:0; left:0; overflow:scroll; overflow-x:hidden; width:150; height:200; scrollbar-base-color:#353349; border-bottom:2px solid black; SCROLLBAR-HIGHLIGHT-COLOR: #504C6D; SCROLLBAR-ARROW-COLOR: white;" >
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='310010.htm'">Page
+        1</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='310020.htm'">Page
+        2</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='310030.htm'">Page
+        3</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='320040.htm'">Page
+        4</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='331050.htm'">Page
+        5</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='331060.htm'">Page
+        6</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='331070.htm'">Page
+        7</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='331080.htm'">Page
+        8</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='331090.htm'">Page
+        9</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='331100.htm'">Page
+        10</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='331110.htm'">Page
+        11</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='331120.htm'">Page
+        12</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='331130.htm'">Page
+        13</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='331140.htm'">Page
+        14</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='331150.htm'">Page
+        15</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='331160.htm'">Page
+        16</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342170.htm'">Page
+        17</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342180.htm'">Page
+        18</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342190.htm'">Page
+        19</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342200.htm'">Page
+        20</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342210.htm'">Page
+        21</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342220.htm'">Page
+        22</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342230.htm'">Page
+        23</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342240.htm'">Page
+        24</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342250.htm'">Page
+        25</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342260.htm'">Page
+        26</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342270.htm'">Page
+        27</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342280.htm'">Page
+        28</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342290.htm'">Page
+        29</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342300.htm'">Page
+        30</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342310.htm'">Page
+        31</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342320.htm'">Page
+        32</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342330.htm'">Page
+        33</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342340.htm'">Page
+        34</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342350.htm'">Page
+        35</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342360.htm'">Page
+        36</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342370.htm'">Page
+        37</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342380.htm'">Page
+        38</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342390.htm'">Page
+        39</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342400.htm'">Page
+        40</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342410.htm'">Page
+        41</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342420.htm'">Page
+        42</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342430.htm'">Page
+        43</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342440.htm'">Page
+        44</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342450.htm'">Page
+        45</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342460.htm'">Page
+        46</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='342470.htm'">Page
+        47</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='351480.htm'">Page
+        48</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='352490.htm'">Page
+        49</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='352500.htm'">Page
+        50</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='352510.htm'">Page
+        51</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='352520.htm'">Page
+        52</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='352530.htm'">Page
+        53</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='352540.htm'">Page
+        54</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='352550.htm'">Page
+        55</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='352560.htm'">Page
+        56</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='361570.htm'">Page
+        57</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> <span onClick="parent.location.href='370580.htm'">Page
+        58</span> </div>
+  </div>
+</div>
+<!-- End of Lesson Reference -->
+</body>
+</html>
+

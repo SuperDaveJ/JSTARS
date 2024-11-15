@@ -1,0 +1,962 @@
+<html>
+<head>
+<title>Lesson 4: Introduction to the Operator Workstation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<script language="JavaScript">
+<!--
+var browser;
+if ( parseInt(navigator.appVersion.charAt(0)) >= 4 ) {
+	if ( navigator.appName == "Netscape" ) {
+  		browser = "NS";
+	} else if ( navigator.appVersion.indexOf("MSIE") != -1 ) {
+		browser = "IE";
+	}
+}
+
+// the following functions work for IE 4+ only
+// ----------------  Interaction Functions -------------------------------
+//Global variables
+var feedback = true;		//No feedback
+var nextButton = true;		//Is there a Next button for next question
+var blnRandom = false;		//Are questions need to be randomized?
+var blnInTest = true;		//Is the user in test? If yes, disable some buttons.
+var userMode = 1;			//1 = scored, 2 = not scored (or review)			
+var userAns = 0;			//user answer for Multiple Choice questions
+arrUserAns = new Array();	//user answer for Multiple Answer questions
+var triesUser = 0;
+var triesLimit = 1;
+var qStatus = 0;			//question status. 1=correct, 0=incorrect
+var qIndex = 0;				//qIndex is an index of question order (qOrder)
+var blnChoiceMade = false;	//Has user made any choice?
+
+var nQs = 17;				//Total number of questions
+var nNonQPgs = 68;			//Total number of pages excluding test question pages. Used for page number display
+var nQtoShow = nQs;			//Number of questiones to be showed for each round
+var nTotalCorrect = 0;		//Total number of questions that were answered correctly
+var passScore = 75;			//Minimum score required to pass the course
+var userScore = 0;			//User's assessment score in percentage
+var strSkipped = "";		//a string - questions that are skipped.
+arrSkipped = new Array();	//an array - questions that are skipped.
+var strPageNumber = "";
+arrPageNumber = new Array();
+
+arrQs = new Array(nQs);
+qOrder_seq = new Array(nQs);
+qOrder = new Array(nQs);
+for (var i=0; i<nQs; i++) {
+	arrQs[i] = new Array(12);
+	qOrder_seq[i] = i;
+	arrPageNumber[i] = i + 1;
+}
+//There is no feedback for assessment.  They are here in case needed for other courses.
+//qIndex is a global variable used as an index in qOrder[] array.
+//qNum is a local variable used in several function.  It is used as an index in nQs[] array.
+
+//The index for each queston is as follow:
+// 0 - integer, questoin ID
+// 1 - integer (1 or 2), question type. 1 = Multiple Choice, 2 = Multiple Answer.
+// 2 - integer, number of distracters
+// 3 - string, question stem
+// 4 - string, distracters concatinated with a # symbol
+// 5 - integer (1 to n), correct answer
+// 6 - integer (1 to n), user answer
+// 7 - string, Feedback - Correct.
+// 8 - string, Feedback - 1st Incorrect.
+// 9 - string, Feedback - 2nd Incorrect.
+// Note: the feedback is changed. All feedbacks are contained in index 8.  It's an array.
+//       Each distracter has its own feedback.
+//       Index 7 and 9 are not used anymore.
+// 10 - string, Prompt
+// 11 - integer (0 or 1), has this question been evaluated? 0 = not evaluated, 1 = evaluated
+
+//Question #1
+arrQs[0][0] = 1;
+arrQs[0][1] = 1;
+arrQs[0][2] = 4;
+arrQs[0][3] = "How many Operator Workstations are there on the E-8C including the Navigator OWS?";
+arrQs[0][4] = "12#14#16#18";
+arrQs[0][5] = 4;
+arrQs[0][6] = 0;
+arrQs[0][7] = "";
+arrQs[0][8] = new Array();
+arrQs[0][8][1] = "Incorrect.  There are 17 Operator Workstations and 1 Navigator Operator Workstation.  Click Next to continue.";
+arrQs[0][8][2] = "Incorrect.  There are 17 Operator Workstations and 1 Navigator Operator Workstation.  Click Next to continue.";
+arrQs[0][8][3] = "Incorrect.  There are 17 Operator Workstations and 1 Navigator Operator Workstation.  Click Next to continue.";
+arrQs[0][8][4] = "Correct!  There are 17 Operator Workstations and 1 Navigator Operator Workstation.  Click Next to continue.";
+arrQs[0][9] = "";
+arrQs[0][10] = "Click your choice, then click DONE.";
+arrQs[0][11] = 0;
+
+//Question #2
+arrQs[1][0] = 2;
+arrQs[1][1] = 1;
+arrQs[1][2] = 4;
+arrQs[1][3] = '“To provide mission crewmembers the interface for data display, storage and recall, and initiation of requests for data from the Radar System” describes the purpose of the ______.';
+arrQs[1][4] = "FSU#CMT#OWS#NOWS";
+arrQs[1][5] = 3;
+arrQs[1][6] = "";
+arrQs[1][7] = "";
+arrQs[1][8] = new Array();
+arrQs[1][8][1] = "Incorrect.  The FSU does not serve this purpose.  It is the purpose of the OWS to provide mission crewmembers the interface for data display, storage and recall, and initiation of requests for data from the Radar System.  Click Next to continue.";
+arrQs[1][8][2] = "Incorrect.  The CMT does not serve this purpose.  It is the purpose of the OWS to provide mission crewmembers the interface for data display, storage and recall, and initiation of requests for data from the Radar System.  Click Next to continue.";
+arrQs[1][8][3] = "Correct!  The purpose of the Operator Workstation is to provide mission crewmembers the interface for data display, storage and recall, and initiation of requests for data from the Radar System.  Click Next to continue.";
+arrQs[1][8][4] = "Incorrect.  It is purpose of the OWS, not the NOWS, is to provide mission crewmembers the interface for data display, storage and recall, and initiation of requests for data from the Radar System.  Click Next to continue.";
+arrQs[1][9] = "";
+arrQs[1][10] = "Click your choice, then click DONE.";
+arrQs[1][11] = 0;
+
+//Question #3
+arrQs[2][0] = 3;
+arrQs[2][1] = 1;
+arrQs[2][2] = 2;
+arrQs[2][3] = "The NOWS is identical to the OWS, except for the addition of the Navigator Auxiliary Instrument Panel and a Flight Station Unit instead of a CMT.";
+arrQs[2][4] = "True#False";
+arrQs[2][5] = 1;
+arrQs[2][6] = "";
+arrQs[2][7] = "";
+arrQs[2][8] = new Array();
+arrQs[2][8][1] = "Correct!  The NOWS is identical to the OWS, except for the addition of the NAIP and a FSU instead of a CMT.  Click Next to continue.";
+arrQs[2][8][2] = "Incorrect.  The statement is true.  The NOWS is identical to the OWS, except for the addition of the NAIP and a FSU instead of a CMT.  Click Next to continue.";
+arrQs[2][9] = "";
+arrQs[2][10] = "Click your choice, then click DONE.";
+arrQs[2][11] = 0;
+
+//Question #4
+arrQs[3][0] = 4;
+arrQs[3][1] = 1;
+arrQs[3][2] = 4;
+arrQs[3][3] = '“To provide the required Man-Machine Interface necessary to support the NAV/DSO in completing his/her flight duties” describes the purpose of the ______.';
+arrQs[3][4] = "FSU#CMT#OWS#NOWS";
+arrQs[3][5] = 4;
+arrQs[3][6] = "";
+arrQs[3][7] = "";
+arrQs[3][8] = new Array();
+arrQs[3][8][1] = "Incorrect.  The FSU does not serve this purpose.  The purpose of the Navigator Operator Workstation is to provide the required MMI necessary to support the NAV/DSO in completing his/her flight duties.  Click Next to continue."
+arrQs[3][8][2] = "Incorrect.  The CMT does not serve this purpose.  The purpose of the Navigator Operator Workstation is to provide the required MMI necessary to support the NAV/DSO in completing his/her flight duties.  Click Next to continue.";
+arrQs[3][8][3] = "Incorrect.  It is the purpose of the NOWS, not the OWS, to provide the required MMI necessary to support the NAV/DSO in completing his/her flight duties.  Click Next to continue.";
+arrQs[3][8][4] = "Correct! The purpose of the Navigator Operator Workstation is to provide the required MMI necessary to support the NAV/DSO in completing his/her flight duties.  Click Next to continue.";
+arrQs[3][9] = "";
+arrQs[3][10] = "Click your choice, then click DONE.";
+arrQs[3][11] = 0;
+
+//Question #5
+arrQs[4][0] = 5;
+arrQs[4][1] = 1;
+arrQs[4][2] = 2;
+arrQs[4][3] = "The Warning and Alert Annunciator Panel warning signs are supplemented by warning bells that can be heard even when radio, interphone, or public address (PA) is in use.";
+arrQs[4][4] = "True#False";
+arrQs[4][5] = 1;
+arrQs[4][6] = "";
+arrQs[4][7] = "";
+arrQs[4][8] = new Array();
+arrQs[4][8][1] = "Correct!  These warning signs are supplemented by warning bells that can be heard even when radio, interphone, or public address (PA) is in use.  Click Next to continue."
+arrQs[4][8][2] = "Incorrect.  The statement is true.  These warning signs are supplemented by warning bells that can be heard even when radio, interphone, or public address (PA) is in use.  Click Next to continue."
+arrQs[4][9] = "";
+arrQs[4][10] = "Click your choice, then click DONE.";
+arrQs[4][11] = 0;
+
+//Question #6
+arrQs[5][0] = 6;
+arrQs[5][1] = 1;
+arrQs[5][2] = 4;
+arrQs[5][3] = "Where is the Console PWR switch located?";
+arrQs[5][4] = "The OWS Keyboard/Function Keys/Trackball Assembly#The NOWS Navigator Auxiliary Instrument Panel#The NOWS Auxiliary Navigator Instrument Panel#The OWS Overhead Panel";
+arrQs[5][5] = 4;
+arrQs[5][6] = "";
+arrQs[5][7] = "";
+arrQs[5][8] = new Array();
+arrQs[5][8][1] = "Incorrect. The O&C Power Control is not a part of the OWS Keyboard/Function Keys/Trackball Assembly.  The O&C Power Control is a component of the OWS overhead panel.  Click Next to continue."
+arrQs[5][8][2] = "Incorrect.  The O&C Power Control is not a part of the NAIP.  The O&C Power Control is a component of the OWS overhead panel.  Click Next to continue."
+arrQs[5][8][3] = "Incorrect.  The O&C Power Control is not a part of the ANIP.  The O&C Power Control is a component of the OWS overhead panel.  Click Next to continue."
+arrQs[5][8][4] = "Correct!  The O&C Power Control is a component of the OWS overhead panel.  Click Next to continue."
+arrQs[5][9] = "";
+arrQs[5][10] = "Click your choice, then click DONE.";
+arrQs[5][11] = 0;
+
+//Question #7
+arrQs[6][0] = 7;
+arrQs[6][1] = 1;
+arrQs[6][2] = 4;
+arrQs[6][3] = "What OWS console light allows you to direct illumination and focus lighting where you need it at your workstation?";
+arrQs[6][4] = "The console panel light#The floodlight#The spotlight#The exit light";
+arrQs[6][5] = 3;
+arrQs[6][6] = "";
+arrQs[6][7] = "";
+arrQs[6][8] = new Array();
+arrQs[6][8][1] = "Incorrect.  The console panel light does not serve this purpose.  The spotlight allows you to direct illumination and focus lighting where you need it at your workstation.  Click Next to continue."
+arrQs[6][8][2] = "Incorrect.  The floodlight does not serve this purpose.  The spotlight allows you to direct illumination and focus lighting where you need it at your workstation.  Click Next to continue."
+arrQs[6][8][3] = "Correct! With the spotlight you can direct illumination to focus lighting where you need it at your workstation.  Click Next to continue."
+arrQs[6][8][4] = "Incorrect.  The exit light does not serve this purpose.  The spotlight allows you to direct illumination and focus lighting where you need it at your workstation.  Click Next to continue."
+arrQs[6][9] = "";
+arrQs[6][10] = "Click your choice, then click DONE.";
+arrQs[6][11] = 0;
+
+//Question #8
+arrQs[7][0] = 8;
+arrQs[7][1] = 1;
+arrQs[7][2] = 4;
+arrQs[7][3] = "What lever on the front of the Oxygen Regulator controls the shutoff valve to the regulator?";
+arrQs[7][4] = "The Diluter Lever#The Supply Lever#The Override Lever#The Emergency Lever";
+arrQs[7][5] = 2;
+arrQs[7][6] = "";
+arrQs[7][7] = "";
+arrQs[7][8] = new Array();
+arrQs[7][8][1] = "Incorrect.  The Diluter Lever does not serve this purpose.  The Supply Lever controls the shutoff valve to the regulator.  Click Next to continue."
+arrQs[7][8][2] = "Correct!  The Supply Lever controls the shutoff valve to the regulator.  Click Next to continue."
+arrQs[7][8][3] = "Incorrect.  The Oxygen Regulator does not have an Override lever.  The Supply Lever controls the shutoff valve to the regulator.  Click Next to continue."
+arrQs[7][8][4] = "Incorrect.  The Emergency Lever does not serve this purpose.  The Supply Lever controls the shutoff valve to the regulator.  Click Next to continue."
+arrQs[7][9] = "";
+arrQs[7][10] = "Click your choice, then click DONE.";
+arrQs[7][11] = 0;
+
+//Question #9
+arrQs[8][0] = 9;
+arrQs[8][1] = 1;
+arrQs[8][2] = 4;
+arrQs[8][3] = "What lever on the front of the Oxygen Regulator controls the percent of oxygen and air delivered to the mask?";
+arrQs[8][4] = "The Diluter Lever#The Supply Lever#The Override Lever#The Emergency Lever";
+arrQs[8][5] = 1;
+arrQs[8][6] = "";
+arrQs[8][7] = "";
+arrQs[8][8] = new Array();
+arrQs[8][8][1] = "Correct!  The Diluter Lever controls the percent of oxygen and air delivered to the mask.  Click Next to continue."
+arrQs[8][8][2] = "Incorrect.  The Supply Lever does not serve this purpose.  The Diluter Lever controls the percent of oxygen and air delivered to the mask.  Click Next to continue."
+arrQs[8][8][3] = "Incorrect.  The Oxygen Regulator does not have an Override lever.  The Diluter Lever controls the percent of oxygen and air delivered to the mask.  Click Next to continue."
+arrQs[8][8][4] = "Incorrect.  The Emergency Lever does not serve this purpose.  The Diluter Lever controls the percent of oxygen and air delivered to the mask.  Click Next to continue."
+arrQs[8][9] = "";
+arrQs[8][10] = "Click your choice, then click DONE.";
+arrQs[8][11] = 0;
+
+//Question #10
+arrQs[9][0] = 10;
+arrQs[9][1] = 1;
+arrQs[9][2] = 4;
+arrQs[9][3] = "What does the Flow Indicator on the Oxygen Regulator show?";
+arrQs[9][4] = "The oxygen system pressure#The Oxygen Regulator input pressure#The Oxygen Regulator output pressure#The relative amount of flow to the mask";
+arrQs[9][5] = 4;
+arrQs[9][6] = "";
+arrQs[9][7] = "";
+arrQs[9][8] = new Array();
+arrQs[9][8][1] = "Incorrect.  The oxygen system pressure is not represented by the Flow Indicator.  The Flow Indicator shows relative amount of flow to the mask.  Click Next to continue."
+arrQs[9][8][2] = "Incorrect.  The Oxygen Regulator input pressure is not represented by the Flow Indicator.  The Flow Indicator shows relative amount of flow to the mask.  Click Next to continue."
+arrQs[9][8][3] = "Incorrect.  The Oxygen Regulator output pressure is not represented by the Flow Indicator.  The Flow Indicator shows relative amount of flow to the mask.  Click Next to continue."
+arrQs[9][8][4] = "Correct!  The Flow Indicator shows relative amount of flow to the mask.  Click Next to continue."
+arrQs[9][9] = "";
+arrQs[9][10] = "Click your choice, then click DONE.";
+arrQs[9][11] = 0;
+
+//Question #11
+arrQs[10][0] = 11;
+arrQs[10][1] = 1;
+arrQs[10][2] = 4;
+arrQs[10][3] = "What overhead panel component provides the operator with conditioned and semi-conditioned cool air for operator comfort?";
+arrQs[10][4] = "The floor vent#The Gasper Air Valve#The Oxygen Regulator#The O&C Power Control Panel";
+arrQs[10][5] = 2;
+arrQs[10][6] = "";
+arrQs[10][7] = "";
+arrQs[10][8] = new Array();
+arrQs[10][8][1] = "Incorrect.  There is no floor vent on the OWS overhead panel.  The Gasper Air Valve provides the operator with conditioned and semi-conditioned cool air for operator comfort.  Click Next to continue."
+arrQs[10][8][2] = "Correct!  The Gasper Air Valve provides the operator with conditioned and semi-conditioned cool air for operator comfort.  Click Next to continue."
+arrQs[10][8][3] = "Incorrect.  The Oxygen Regulator does not serve this purpose.  The Gasper Air Valve provides the operator with conditioned and semi-conditioned cool air for operator comfort.  Click Next to continue."
+arrQs[10][8][4] = "Incorrect.  The O&C Power Control Panel does not serve this purpose.  The Gasper Air Valve provides the operator with conditioned and semi-conditioned cool air for operator comfort.  Click Next to continue."
+arrQs[10][9] = "";
+arrQs[10][10] = "Click your choice, then click DONE.";
+arrQs[10][11] = 0;
+
+//Question #12
+arrQs[11][0] = 12;
+arrQs[11][1] = 1;
+arrQs[11][2] = 4;
+arrQs[11][3] = "What OWS component provides the operator with a color presentation of graphic and tabular data?";
+arrQs[11][4] = "GDU#CMT#SEM#FSU";
+arrQs[11][5] = 1;
+arrQs[11][6] = "";
+arrQs[11][7] = "";
+arrQs[11][8] = new Array();
+arrQs[11][8][1] = "Correct!  The OWS Graphic Display Unit provides the operator with a color presentation of graphic and tabular data.  Click Next to continue."
+arrQs[11][8][2] = "Incorrect.  The CMT does not serve this purpose.  The Graphic Display Unit (GDU) provides the operator with a color presentation of graphic and tabular data.  Click Next to continue."
+arrQs[11][8][3] = "Incorrect.  The System Environment Manager (SEM) does not serve this purpose.  The Graphic Display Unit (GDU) provides the operator with a color presentation of graphic and tabular data.  Click Next to continue."
+arrQs[11][8][4] = "Incorrect.  The FSU does not serve this purpose.  The Graphic Display Unit (GDU) provides the operator with a color presentation of graphic and tabular data.  Click Next to continue."
+arrQs[11][9] = "";
+arrQs[11][10] = "Click your choice, then click DONE.";
+arrQs[11][11] = 0;
+
+//Question #13
+arrQs[12][0] = 13;
+arrQs[12][1] = 1;
+arrQs[12][2] = 4;
+arrQs[12][3] = "To perform operator unique functions, each workstation is equipped with a(n) ________________.";
+arrQs[12][4] = "Graphic Display Unit (GDU)#Crew Member Terminal (CMT)#Operator Workstation Data Processor (OWSDP)#Operator Workstation Mass Storage Device (OWSMSD)";
+arrQs[12][5] = 3;
+arrQs[12][6] = "";
+arrQs[12][7] = "";
+arrQs[12][8] = new Array();
+arrQs[12][8][1] = "Incorrect.  The GDU does not serve this purpose.  To perform operator unique functions, each workstation is equipped with an OWSDP.  Click Next to continue."
+arrQs[12][8][2] = "Incorrect.  The CMT does not serve this purpose.  To perform operator unique functions, each workstation is equipped with an OWSDP.  Click Next to continue."
+arrQs[12][8][3] = "Correct!  To perform operator unique functions, each workstation is equipped with an OWS Data Processor (OWSDP).  Click Next to continue."
+arrQs[12][8][4] = "Incorrect.  The OWSMSD does not serve this purpose.  To perform operator unique functions, each workstation is equipped with an OWSDP.  Click Next to continue."
+arrQs[12][9] = "";
+arrQs[12][10] = "Click your choice, then click DONE.";
+arrQs[12][11] = 0;
+
+//Question #14
+arrQs[13][0] = 14;
+arrQs[13][1] = 1;
+arrQs[13][2] = 4;
+arrQs[13][3] = "What OWS component contains up to three Removable Memory Modules (RMM) slots and a power supply?";
+arrQs[13][4] = "Graphic Display Unit (GDU)#Crew Member Terminal (CMT)#Operator Workstation Data Processor (OWSDP)#Operator Workstation Mass Storage Device (OWSMSD)";
+arrQs[13][5] = 4;
+arrQs[13][6] = "";
+arrQs[13][7] = "";
+arrQs[13][8] = new Array();
+arrQs[13][8][1] = "Incorrect.  The GDU is a graphic display device.  Each OWSMSD contains up to three RMM slots and a power supply.  Click Next to continue."
+arrQs[13][8][2] = "Incorrect.  The CMT is a communication terminal.  Each OWSMSD contains up to three RMM slots and a power supply.  Click Next to continue."
+arrQs[13][8][3] = "Incorrect.  The OWSDP does not contain any RMMs.  Each OWSMSD contains up to three RMM slots and a power supply.  Click Next to continue."
+arrQs[13][8][4] = "Correct!  Each OWSMSD contains up to three Removable Memory Modules (RMM) slots and a power supply.  Click Next to continue."
+arrQs[13][9] = "";
+arrQs[13][10] = "Click your choice, then click DONE.";
+arrQs[13][11] = 0;
+
+//Question #15
+arrQs[14][0] = 15;
+arrQs[14][1] = 1;
+arrQs[14][2] = 4;
+arrQs[14][3] = "How many Crewmember Terminals are located throughout the E-8C?";
+arrQs[14][4] = "20#19#17#16";
+arrQs[14][5] = 2;
+arrQs[14][6] = "";
+arrQs[14][7] = "";
+arrQs[14][8] = new Array();
+arrQs[14][8][1] = "Incorrect.  There are 19 CMTs throughout the aircraft.  One CMT is positioned at each OWS with two Auxiliary CMTs located in the aircraft's Crew Rest Area and on top of data rack 2.  Click Next to continue."
+arrQs[14][8][2] = "Correct!  There are 19 CMTs throughout the aircraft.  One CMT is positioned at each OWS with two Auxiliary CMTs located in the aircraft's Crew Rest Area and on top of data rack 2.  Click Next to continue."
+arrQs[14][8][3] = "Incorrect.  Although there 17 OWS consoles, there are 19 CMTs throughout the aircraft.  One CMT is positioned at each OWS with two Auxiliary CMTs located in the aircraft's Crew Rest Area and on top of data rack 2.  Click Next to continue."
+arrQs[14][8][4] = "Incorrect.  There are 19 CMTs throughout the aircraft.  One CMT is positioned at each OWS with two Auxiliary CMTs located in the aircraft's Crew Rest Area and on top of data rack 2.  Click Next to continue."
+arrQs[14][9] = "";
+arrQs[14][10] = "Click your choice, then click DONE.";
+arrQs[14][11] = 0;
+
+//Question #16
+arrQs[15][0] = 16;
+arrQs[15][1] = 1;
+arrQs[15][2] = 4;
+arrQs[15][3] = "At both the OWS and NOWS consoles, what is used to key the selected radios for transmission?";
+arrQs[15][4] = "The left footswitch#The Hot-Mic switch#The right footswitch#The black PTT button";
+arrQs[15][5] = 3;
+arrQs[15][6] = "";
+arrQs[15][7] = "";
+arrQs[15][8] = new Array();
+arrQs[15][8][1] = "Incorrect.  The left footswitch is used to key the selected intercommunication nets for transmission.  The right footswitch is used to key the selected radios for transmission.  Click Next to continue."
+arrQs[15][8][2] = "Incorrect.  The Hot-Mic switch is not used to key radios.  The right footswitch is used to key the selected radios for transmission.  Click Next to continue."
+arrQs[15][8][3] = "Correct!  The right footswitch is used to key the selected radios for transmission.  Click Next to continue."
+arrQs[15][8][4] = "Incorrect.  The black PTT button is used to key the selected intercommunication nets for transmission.  The right footswitch is used to key the selected radios for transmission.  Click Next to continue."
+arrQs[15][9] = "";
+arrQs[15][10] = "Click your choice, then click DONE.";
+arrQs[15][11] = 0;
+
+//Question #17
+arrQs[16][0] = 17;
+arrQs[16][1] = 1;
+arrQs[16][2] = 4;
+arrQs[16][3] = "What panel allows the Navigator/Defense System Operator to control and monitor aircraft navigation and systems performance?";
+arrQs[16][4] = "The Auxiliary Navigator Instrument Panel#The Navigator Auxiliary Instrument Panel#The O&C Power Control Panel#The Overhead Panel";
+arrQs[16][5] = 2;
+arrQs[16][6] = "";
+arrQs[16][7] = "";
+arrQs[16][8] = new Array();
+arrQs[16][8][1] = "Incorrect.  The ANIP does not serve this purpose.  The NAIP allows the Navigator/Defense System Operator to control and monitor aircraft navigation and systems performance.  Click Next to continue."
+arrQs[16][8][2] = "Correct!  The Navigator Auxiliary Instrument Panel (NAIP) allows the Navigator/Defense System Operator to control and monitor aircraft navigation and systems performance.  Click Next to continue."
+arrQs[16][8][3] = "Incorrect.  The O&C Power Control Panel does not serve this purpose.  The NAIP allows the Navigator/Defense System Operator to control and monitor aircraft navigation and systems performance.  Click Next to continue."
+arrQs[16][8][4] = "Incorrect.  The Overhead Panel does not serve this purpose.  The NAIP allows the Navigator/Defense System Operator to control and monitor aircraft navigation and systems performance.  Click Next to continue."
+arrQs[16][9] = "";
+arrQs[16][10] = "Click your choice, then click DONE.";
+arrQs[16][11] = 0;
+
+
+function getRandom(topLimit) {   
+	return Math.floor(Math.random()*topLimit)
+}
+
+function setQOrder() {
+	// Set question order
+
+	if (!blnRandom)
+		qOrder = qOrder_seq;
+	else
+		doRandomization();
+}
+	
+function doRandomization() {
+	// Generate numberOfQuestoins unique random numbers
+	// initialization
+	arrTemp = new Array(nQs);
+		
+	for (i=0; i<nQs; i++) arrTemp[i]=-1
+		
+	// create a temp array of nQs unique random numbers
+	for (i=0; i<nQs; i++) {
+		for (j=0; j<100000; j++) {
+			blnFound = false;
+			intTemp = getRandom(nQs);
+			for (k=0; k<nQs; k++) {
+				if (arrTemp[k] == intTemp) {
+					blnFound = true;
+					break;
+				}
+			}
+			if (!blnFound) {
+				arrTemp[i] = intTemp;
+				break;
+			}
+		}
+	}
+//alert(arrTemp);
+	for (i=0; i<nQs; i++) {
+		k = arrTemp[i];
+		qOrder[i] = qOrder_seq[k];
+	}
+}
+
+function reInitialize() {
+	qIndex = 0;
+	if (strSkipped == "") {
+		blnInTest = false;
+		//completed all questions
+		document.location.href = "AfterAssessment.htm?nCorrect="+nTotalCorrect+"&nTotal="+nQs
+		//writeReport();
+	} else {
+		strSkipped = strSkipped.substring(0, strSkipped.length-1);
+		qOrder = strSkipped.split(",");
+		nQtoShow = qOrder.length;
+		strPageNumber = strPageNumber.substring(0, strPageNumber.length-1);
+		arrPageNumber = strPageNumber.split(",");
+		
+		writeQuestion(qOrder[0]);
+	}
+	strSkipped = "";
+	strPageNumber = "";
+}
+	
+function itemSelection( qNum,I ) {
+	document.all["ansQuPrompt"].style.visibility = "hidden";
+	var qType = arrQs[qNum][1];
+	var nItems = arrQs[qNum][2];
+  	if (triesUser < triesLimit) {
+		if (feedback) {
+			/*
+			document.all["fbCorrect"].style.visibility = "hidden";
+			document.all["fbIncorrect1"].style.visibility = "hidden";
+			document.all["fbIncorrect2"].style.visibility = "hidden";
+			*/
+		}
+		
+		switch (qType) {
+			case 1:	//Multiple Choice
+  				{
+					//This part works for multiple Choice - one correct answer
+					userAns = I;
+					blnChoiceMade = true;
+					for (var j=1; j<=nItems; j++) {
+						if (j == I) {
+							eval('document.all.choice' + j + '_sel.style.visibility = "visible"');
+						} else {
+							eval('document.all.choice' + j + '_sel.style.visibility = "hidden"');
+						}
+    				}
+					break;
+				}	// end of case 1
+				
+			case 2:	//Multiple Answer
+				{
+ 					//This part works for multiple correct answers
+					for (j=1; j<=nItems; j++) {
+						if (j == I) {
+							//***** toggle highlight *****
+							//Previous state
+							blnNormal = eval('document.all.choice' + I + '.style.visibility == "visible"')
+							blnSelected = eval('document.all.choice' + I + '_sel.style.visibility == "visible"')
+							//Set new state
+							if (blnNormal) {
+								arrUserAns[I-1] = 1;
+								eval('document.all.choice' + I + '.style.visibility = "hidden"');
+								eval('document.all.choice' + I + '_sel.style.visibility = "visible"');
+							} else if (blnSelected) {
+								arrUserAns[I-1] = 0;
+								eval('document.all.choice' + I + '_sel.style.visibility = "hidden"');
+								eval('document.all.choice' + I + '.style.visibility = "visible"');
+							}
+						}
+    				}
+					//Make sure at least 1 choice has been made
+					blnChoiceMade = false;
+					for (j=0; j<nItems; j++) {
+						if (arrUserAns[j] == 1) {
+							blnChoiceMade = true;
+							break;
+						}
+					}
+					break;
+  				}	// end of case 2
+		} //End of switch
+				
+	}	//End of (triesUser < triesLimit)
+}
+
+function judgeInteraction(qNum) {
+	//if no choice made, display message and exit function
+	if (!blnChoiceMade) {
+		document.all["feedback"].innerText = "Please select an answer.";
+		document.all["ansQuPrompt"].style.visibility = "visible";
+		blnChoiceMade = false;
+		return;
+	}
+
+	var qType = arrQs[qNum][1];
+	var nItems = arrQs[qNum][2];
+	triesUser += 1;
+	switch (qType) {
+		case 1:	//Multiple Choice
+			{
+				arrQs[qNum][6] = userAns;
+				correctAns = arrQs[qNum][5];
+				qStatus = 0;
+				if (correctAns == userAns) qStatus = 1
+				break
+			}	//End of case 1
+		case 2:	//Multiple Answer
+			{
+				qStatus = 1;
+				arrQs[qNum][6] = arrUserAns.join();
+				arrCorrectAns = new Array();
+				arrCorrectAns = arrQs[qNum][5].split(",");
+				for (var i=0; i<nItems; i++) {
+					if (arrCorrectAns[i] != arrUserAns[i]) {
+						qStatus = 0;
+						break;
+					}
+				}
+				break;
+			}	// End of case 2
+	}	//End of switch
+	
+	if (feedback) {
+		/*
+		arrFeedbacks = new Array(nItems);
+		arrFeedbacks = arrQs[qNum][8].split("~");
+		document.all["feedback"].innerText = arrFeedbacks[userAns-1];
+		*/
+		document.all["feedback"].innerText = arrQs[qNum][8][userAns];
+		/*
+	  	if (qStatus == 1) {
+			document.all["fbIncorrect1"].style.visibility = "hidden";
+			document.all["fbIncorrect2"].style.visibility = "hidden";
+			document.all["fbCorrect"].style.visibility = "visible";
+	  	} else {
+			document.all["fbCorrect"].style.visibility = "hidden";
+			if (triesUser == triesLimit)
+				document.all["fbIncorrect2"].style.visibility = "visible";
+			else
+				document.all["fbIncorrect1"].style.visibility = "visible";
+	  	}
+		*/
+	}
+	//save info.
+	qIndex += 1;	//increment question
+	arrQs[qNum][11] = 1;	//this question is evaluated
+	nTotalCorrect += qStatus;
+	if ( (qStatus == 1) || (triesUser == triesLimit) ) {
+		if (nextButton)
+			finalStep(qNum)
+		else {
+			//if (qIndex < nQs) writeQuestion(qOrder[qIndex])
+			if (qIndex < nQtoShow) writeQuestion(qOrder[qIndex])
+			else reInitialize()
+		}
+	}
+}
+
+function skipQuestion(qNum) {
+	qIndex += 1;
+	strPageNumber = strPageNumber + qIndex + ",";
+	strSkipped = strSkipped + qNum + ",";
+	if (qIndex < nQtoShow) writeQuestion(qOrder[qIndex])
+	else reInitialize()
+}
+
+function finalStep(qNum) {
+	var nItems = arrQs[qNum][2];
+	for (var i=1; i<=nItems; i++) {
+		document.all["choice"+i+"_sel"].style.visibility = "hidden";
+		if (correctAns == i)
+			document.all["choice"+i+"_hlt"].style.visibility = "visible"
+		else
+			document.all["choice"+i+"_dis"].style.visibility = "visible"
+	}
+	document.all["ansQuPrompt"].style.visibility = "visible";
+	document.all["prompt"].innerText = "Click Next to continue.";
+}
+
+function nextQuestion() {
+	//document.all["ansQuPrompt"].style.visibility = "hidden";
+	if (blnInTest) {
+		if (qIndex < nQtoShow) writeQuestion(qOrder[qIndex])
+		else reInitialize()
+	} else {
+		//back to Menu
+		//window.location = "../LessonMenu01.htm"
+		//This branch is not used
+		//window.location = "291870.htm"
+	}
+}
+
+function writeQuestion(qNum) {
+	//reset variables
+	userAns = 0;
+	arrUserAns = new Array();
+	triesUser = 0;
+	qStatus = 0;	//question status. 1=correct, 0=incorrect
+	blnChoiceMade = false;
+	
+	var startLeft = "10px";
+	var startTop = 50;
+	var verSpace = 40;
+	var width = "450px";
+	var celPad = 3;		//cellpadding
+	var butWidth = "30px";	//letter button width
+	var strHTML = "";
+
+	var nItems = arrQs[qNum][2];
+	for (var j=0; j<nItems; j++)
+		arrUserAns[j] = 0
+	distracters = new Array(nItems);
+	distracters = arrQs[qNum][4].split("#");
+	
+	strHTML = strHTML + "<div id ='questionStem' style='position:absolute; left:0px; top:0px; width:472px; height:40px; z-index:1' class='questionText'>";
+	strHTML = strHTML + arrQs[qNum][3];
+	strHTML = strHTML + "</div>";
+	
+	for (var i=1; i<=nItems; i++) {
+		//normal layers
+		strHTML = strHTML + "<div id='choice" + i + "' style='position:absolute; left:" + startLeft + "; top:" + (startTop+(i-1)*verSpace).toString() + "px; width:" + width + "; z-index:1; visibility:visible;' class='distracter' onClick='itemSelection(" + qNum + "," + i + ")'>"
+		strHTML = strHTML + "<table width='100%' cellpadding='" + celPad + "' boder='0'>"
+		strHTML = strHTML + "<tr><td width='" + butWidth + "' align='left' onMouseOver='MM_swapImage(&quot;imageBtn" + i + "&quot;,&quot;&quot;,&quot;../System/btn" + i + "_over.jpg&quot;,1)' onMouseOut='MM_swapImgRestore()'><img src='../System/btn" + i + ".jpg' alt='Choice " + i + "' name='imageBtn" + i + "' border='0'></td>"
+		strHTML = strHTML + "<td align='left' class='distracter'>" + distracters[i-1] + "</td></tr></table>"
+		strHTML = strHTML + "</div>"
+		//selected layers
+		strHTML = strHTML + "<div id='choice" + i + "_sel' style='position:absolute; left:" + startLeft + "; top:" + (startTop+(i-1)*verSpace).toString() + "px; width:" + width + "; z-index:1; visibility:hidden;' class='distracter_sel' onClick='itemSelection(" + qNum + "," + i + ")'>"
+		strHTML = strHTML + "<table width='100%' cellpadding='" + celPad + "' boder='0'>"
+		strHTML = strHTML + "<tr><td width='" + butWidth + "' align='left' onMouseOver='MM_swapImage(&quot;imageBtn" + i + "&quot;,&quot;&quot;,&quot;../System/btn" + i + "_over.jpg&quot;,1)' onMouseOut='MM_swapImgRestore()'><img src='../System/btn" + i + "_sel.jpg' alt='Choice " + i + "' name='imageBtn" + i + "_sel' border='0'></td>"
+		strHTML = strHTML + "<td align='left' class='distracter_sel'>" + distracters[i-1] + "</td></tr></table>"
+		strHTML = strHTML + "</div>"
+		//disabled layers
+		strHTML = strHTML + "<div id='choice" + i + "_dis' style='position:absolute; left:" + startLeft + "; top:" + (startTop+(i-1)*verSpace).toString() + "px; width:" + width + "; z-index:1; visibility:hidden;'>"
+		strHTML = strHTML + "<table width='100%' cellpadding='" + celPad + "' boder='0'>"
+		strHTML = strHTML + "<tr><td width='" + butWidth + "' align='left' onMouseOver='MM_swapImage(&quot;imageBtn" + i + "&quot;,&quot;&quot;,&quot;../System/btn" + i + "_over.jpg&quot;,1)' onMouseOut='MM_swapImgRestore()'><img src='../System/btn" + i + "_dis.jpg' alt='Choice " + i + "' name='imageBtn" + i + "_dis' border='0'></td>"
+		strHTML = strHTML + "<td align='left' class='distracter_dis'>" + distracters[i-1] + "</td></tr></table>"
+		strHTML = strHTML + "</div>"
+		//correct highlight layers
+		strHTML = strHTML + "<div id='choice" + i + "_hlt' style='position:absolute; left:" + startLeft + "; top:" + (startTop+(i-1)*verSpace).toString() + "px; width:" + width + "; z-index:1; visibility:hidden;'>"
+		strHTML = strHTML + "<table width='100%' cellpadding='" + celPad + "' boder='0'>"
+		strHTML = strHTML + "<tr><td width='" + butWidth + "' align='left'><img src='../System/btn" + i + "_hlt.jpg' alt='Choice " + i + "' name='imageBtn" + i + "_hlt' border='0'></td>"
+		strHTML = strHTML + "<td align='left' class='distracter_hlt'>" + distracters[i-1] + "</td></tr></table>"
+		strHTML = strHTML + "</div>"
+	}
+	//Skip and Done button layers
+	var intDoneTop = startTop + nItems*(verSpace+celPad);
+	var doneButtonTop = intDoneTop.toString() + "px";
+	var intSkipWidth = 73;
+	var intSkipLeft = parseInt(startLeft.substring(0,startLeft.length-2)) + 10;
+	var skipButtonLeft = intSkipLeft.toString() + "px";
+	var doneButtonLeft = (intSkipLeft + intSkipWidth + 30).toString() + "px";
+	strHTML = strHTML + "<div id='doneBut' style='position:absolute; left:" + doneButtonLeft + "; top:" + doneButtonTop + "; z-index:2; visibility:visible; cursor:hand;'>"
+	strHTML = strHTML + "<a href='javascript:;' onClick='judgeInteraction(" + qNum + ")' onMouseOver='MM_swapImage(&quot;done&quot;,&quot;&quot;,&quot;../System/done_over.jpg&quot;,1)' onMouseDown='MM_swapImage(&quot;done&quot;,&quot;&quot;,&quot;../System/done_down.jpg&quot;,1)' onMouseOut='MM_swapImgRestore()'>"
+	strHTML = strHTML + "<img src='../System/done.jpg' alt='Done button' name='done' border='0'>"
+	strHTML = strHTML + "</a></div>"
+	
+	//Ask user to make a choice if he/she click done without making a choice.
+	//The following 2 lines are there in case of any changes are needes.  
+	//Otherwise, skipButtonLeft and doneButtonTop variables can be used.
+	var pxLeft = (intSkipLeft-5).toString() + "px";
+	var pxTop = intDoneTop.toString() + "px";
+	strHTML = strHTML + "<div id='ansQuPrompt' style='position:absolute; left:" + pxLeft + "; top:" + pxTop + "; width:400px; height:35px; z-index:10; visibility: hidden;' class='feedbackBoxIncorrect'>";
+	strHTML = strHTML + "<div id=feedback align='center' class='feedbackIncorrect'>Please select an answer.</div>";
+	strHTML = strHTML + "</div>";
+
+	document.all["question"].innerHTML = strHTML;
+	document.all["qNumber"].innerText = "Page " + (nNonQPgs-1+arrPageNumber[qIndex]) + " of " + (nNonQPgs+nQs);
+	document.all["prompt"].innerHTML = arrQs[qNum][10];
+	//if (feedback) writeFeedback(qNum, intSkipLeft, intDoneTop);
+}
+
+function writeReport() {
+	//save data to database
+	//do LMSFinish()
+	//display user assessment results
+	userScore = Math.round(100*nTotalCorrect/nQs);
+	var rptText = "";
+	//rptHTML = rptHTML + "<center><b>Here is you assessment result.</b><p>";
+	rptText = rptText + "You have answered " + nTotalCorrect + " out of " + nQs + " questions correctly for a score of " + userScore + "%.  Have your instructor record your score.";
+	
+	document.all["question"].innerHTML = "";
+	document.all["qNumber"].innerText = "Page " + (nNonQPgs-1+nQs) + " of " + (nNonQPgs+nQs);
+	document.all["prompt"].innerHTML = "Click MENU to return to the lesson menu.";
+	document.all["report"].innerText = rptText;
+	document.all["reportBox"].style.visibility = "visible";
+}
+
+function writeFeedback(qNum, intLeft, intTop) {
+	//3 feedback layers
+	var fdbkHTML = "";
+	var pxLeft = (intLeft + 150).toString() + "px";
+	var pxTop = (intTop + 90).toString() + "px";
+	fdbkHTML = fdbkHTML + "<div id='fbCorrect' style='position:absolute; left:" + pxLeft + "; top:" + pxTop + "; width:300px; height:50px; z-index:10; visibility: hidden;' class='feedbackBoxCorrect'>";
+	fdbkHTML = fdbkHTML + "<div align='center' class='feedbackCorrect'>" + arrQs[qNum][7] + "</div>";
+	fdbkHTML = fdbkHTML + "</div>";
+
+	fdbkHTML = fdbkHTML + "<div id='fbIncorrect1' style='position:absolute; left:" + pxLeft + "; top:" + pxTop + "; width:300px; height:35px; z-index:10; visibility: hidden;' class='feedbackBoxIncorrect'>";
+	fdbkHTML = fdbkHTML + "<div align='center' class='feedbackIncorrect'>" + arrQs[qNum][8] + "</div>";
+	fdbkHTML = fdbkHTML + "</div>";
+	
+	fdbkHTML = fdbkHTML + "<div id='fbIncorrect2' style='position:absolute; left:" + pxLeft + "; top:" + pxTop + "; width:300px; height:50px; z-index:10; visibility: hidden;' class='feedbackBoxIncorrect'>";
+	fdbkHTML = fdbkHTML + "<div align='center' class='feedbackIncorrect'>" + arrQs[qNum][9] + "</div>";
+	fdbkHTML = fdbkHTML + "</div>";
+	document.write( fdbkHTML );
+}
+//-----------------------------------------------------------------
+function toMenu(menuPath) {
+	if (!blnInTest) {
+		window.location = menuPath
+	} else {
+		alert("You cannot go to menu when you are in assessment.")
+	}
+}
+
+function QuitIt() {
+	if (!blnInTest) {
+			if (confirm("Are you sure you want to exit?") == true)
+		window.close()
+	} else {
+		alert("You cannot log out when you are in assessment.")
+	}
+}
+
+function showTopic() {
+	if (!blnInTest) {
+		//MM_showHideLayers('lessonTopic','','show')
+		gotoPopup()
+	} else {
+		alert("You cannot go to lesson Topic when you are in assessment.")
+	}
+}
+//------------------------------------------------------------------
+
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+
+function MM_showHideLayers() { //v6.0
+  var i,p,v,obj,args=MM_showHideLayers.arguments;
+  for (i=0; i<(args.length-2); i+=3) if ((obj=MM_findObj(args[i]))!=null) { v=args[i+2];
+    if (obj.style) { obj=obj.style; v=(v=='show')?'visible':(v=='hide')?'hidden':v; }
+    obj.visibility=v; }
+}
+
+function MM_openBrWindow(theURL,winName,features) { //v2.0
+  window.open(theURL,winName,features);
+}
+
+function MM_controlShockwave(objStr,x,cmdName,frameNum) { //v3.0
+  var obj=MM_findObj(objStr);
+  if (obj) eval('obj.'+cmdName+'('+((cmdName=='GotoFrame')?frameNum:'')+')');
+}
+
+function setCookie(name, value, expire){
+	document.cookie = name + "=" + escape(value) + ((expire == null)?"":("; expires =" + expire.toGMTString()))
+	}
+function getCookie(Name) {
+	var Mysearch = Name + "=";
+	if (document.cookie.length > 0) {
+		offset = document.cookie.indexOf(Mysearch);
+	if (offset != -1){
+		offset += Mysearch.length;
+		end = document.cookie.indexOf(";", offset);
+	if (end == -1)
+		end = document.cookie.length;
+	return unescape(document.cookie.substring(offset, end));
+	}
+	}
+}
+
+function showResult(){
+var audioResult = getCookie("audio");
+switch (audioResult) {
+	case "1":
+		MM_showHideLayers('LAudio','','hide');
+		MM_timelineGoto('Timeline1','1');
+		break;
+	case "0":
+		MM_showHideLayers('LAudio','','show');
+		MM_timelineGoto('Timeline1','2');
+		break;
+	case"":
+		setCookie('audio', 1 );
+		MM_showHideLayers('LAudio','','show');
+		MM_timelineGoto('Timeline1','1');
+		break;
+		}
+}
+
+function MM_timelineGoto(tmLnName, fNew, numGotos) { //v2.0
+  //Copyright 1997, 2000 Macromedia, Inc. All rights reserved.
+  var i,j,tmLn,props,keyFrm,sprite,numKeyFr,firstKeyFr,lastKeyFr,propNum,theObj;
+  if (document.MM_Time == null) MM_initTimelines(); //if *very* 1st time
+  tmLn = document.MM_Time[tmLnName];
+  if (numGotos != null)
+    if (tmLn.gotoCount == null) tmLn.gotoCount = 1;
+    else if (tmLn.gotoCount++ >= numGotos) {tmLn.gotoCount=0; return}
+  jmpFwd = (fNew > tmLn.curFrame);
+  for (i = 0; i < tmLn.length; i++) {
+    sprite = (jmpFwd)? tmLn[i] : tmLn[(tmLn.length-1)-i]; //count bkwds if jumping back
+    if (sprite.charAt(0) == "s") {
+      numKeyFr = sprite.keyFrames.length;
+      firstKeyFr = sprite.keyFrames[0];
+      lastKeyFr = sprite.keyFrames[numKeyFr - 1];
+      if ((jmpFwd && fNew<firstKeyFr) || (!jmpFwd && lastKeyFr<fNew)) continue; //skip if untouchd
+      for (keyFrm=1; keyFrm<numKeyFr && fNew>=sprite.keyFrames[keyFrm]; keyFrm++);
+      for (j=0; j<sprite.values.length; j++) {
+        props = sprite.values[j];
+        if (numKeyFr == props.length) propNum = keyFrm-1 //keyframes only
+        else propNum = Math.min(Math.max(0,fNew-firstKeyFr),props.length-1); //or keep in legal range
+        if (sprite.obj != null) {
+          if (props.prop2 == null) sprite.obj[props.prop] = props[propNum];
+          else        sprite.obj[props.prop2][props.prop] = props[propNum];
+      } }
+    } else if (sprite.charAt(0)=='b' && fNew == sprite.frame) eval(sprite.value);
+  }
+  tmLn.curFrame = fNew;
+  if (tmLn.ID == 0) eval('MM_timelinePlay(tmLnName)');
+}
+
+function preloadImages() {
+	MM_preloadImages('../System/btn1.jpg','../System/btn1_over.jpg','../System/btn1_sel.jpg','../System/btn1_dis.jpg','../System/btn2.jpg','../System/btn2_over.jpg','../System/btn2_sel.jpg','../System/btn2_dis.jpg','../System/btn3.jpg','../System/btn3_over.jpg','../System/btn3_sel.jpg','../System/btn3_dis.jpg','../System/btn4.jpg','../System/btn4_over.jpg','../System/btn4_sel.jpg','../System/btn4_dis.jpg','../System/done.jpg','../System/done_over.jpg','../System/done_down.jpg')
+}
+
+//-------------------------------------------------------------------
+var oGoto = window.createPopup();
+function gotoPopup()
+{
+    oGoto.document.body.innerHTML = oReferenceHTML.innerHTML; 
+	//the dimensions need to match that of scroll box layer
+	//the position is relative to btnGoto object
+    oGoto.show(-50, -211, 150, 200, btnGoto);
+}
+//-->
+</script>
+
+<link rel="stylesheet" href="../System/Interaction.css" type="text/css">
+
+<link href="../System/JStars.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body bgcolor="#403F56" background="../System/background-main.jpg" link="#FDF543" vlink="#A79DDE" alink="#FED803" onLoad="preloadImages();MM_preloadImages('../System/logout_2.jpg','../System/goto_2.jpg')">
+<!-- Questoin display in this area -->
+<div id="question" style="position:absolute; left:160px; top:95px; width:483px; height:371px; z-index:0"> 
+</div>
+
+<div id="reportBox" style="position:absolute; left:250px; top:250px; width:300px; z-index:10; visibility:hidden" class="feedbackBoxCorrect">
+   <div id="report" align='center' class='reportText'></div>
+</div>
+
+<div id="prompt" style="position:absolute; left:35px; top:512px; width:231px; height:20px; z-index:10; text-align:center" class="prompt">Click your choice, then click DONE.
+</div>
+
+<div id="PageText" style="position:absolute; width:105px; height:14px; z-index:3; left: 655px; top: 21px;">
+  <div id="qNumber" align="right" class="pageNumber"></div>
+</div>
+<script language="JavaScript">
+	setQOrder();
+	writeQuestion(qOrder[0]);
+</script>
+
+<!-- End of questoin display  -->	  
+
+<div id="LnavBar" style="position:absolute; width:455px; height:36px; z-index:1; left: 326; top: 515px;"> 
+  <table width="326" height="24" border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td width="69" align="center" valign="top"><a href="#" onClick="QuitIt()" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('logout','','../System/logout_2.jpg',1)"><img src="../System/logout_0.jpg" alt="Log out the lesson" name="logout" width="57" height="24" border="0"></a> 
+      </td>
+      <td width="70" align="center" valign="top"> <a href="#" onClick="MM_openBrWindow('../Glossary.htm','','scrollbars=yes,width=800,height=550')" 
+												onMouseOver="MM_swapImage('glossary','','../System/glossary_2.jpg',1)" 
+	  											onMouseOut="MM_swapImgRestore()"><img src="../System/glossary_0.jpg" alt="Glossary" name="glossary" width="57" height="24" border="0" id="glossary"></a></td>
+      <td width="70" align="center" valign="top"><a href="#"><img src="../System/remarks_3.jpg" name="remark" width="57" height="24" border="0" id="remark"></a></td>
+      <td width="70" align="center" valign="top"><span id="btnGoto"><img src="../System/goto_0.jpg" alt="Go to a page" name="goto" width="57" height="24" border="0"></span></td>
+      <td width="70" align="center" valign="top"><a href="javascript:toMenu('../LessonMenu01.htm')" 
+	  	onMouseOver="MM_swapImage('Menu','','../System/menu_2.jpg',1)" onMouseOut="MM_swapImgRestore()"> 
+        <img src="../System/menu_0.jpg" alt="Go to Main Menu" name="Menu" width="57" height="24" border="0"></a></td>
+      <td width="70" align="center" valign="top"><img src="../System/back_3.jpg" name="Prev" width="57" height="24" border="0"></td>
+      <td width="75" align="center" valign="top"><img src="../System/replay_3.jpg" name="replay" width="57" height="24" border="0" id="replay"></td>
+	  <!--
+      <td width="66" align="center" valign="top"><img src="../System/next_3.jpg" alt="Go to next page" name="Next" width="57" height="24" border="0" id="Next"></td>
+	  -->
+      <td width="66" align="center" valign="top"><a href="javascript:javascript:nextQuestion()" onMouseOver="MM_swapImage('Next','','../System/next_2.jpg',1)" onMouseOut="MM_swapImgRestore()"><img src="../System/next_0.jpg" alt="Go to next page" name="Next" width="57" height="24" border="0" id="Next"></a></td>
+    </tr>
+  </table>
+</div>
+<div id="Help" style="position:absolute; width:20px; height:30px; z-index:2; left: 4px; top: 510px;"> 
+  <a href="#" onClick="MM_openBrWindow('../Help.htm','','width=800,height=550')" onMouseOver="MM_swapImage('Image18','','../System/help_1.jpg',1)" onMouseOut="MM_swapImgRestore()"><img src="../System/help_0.jpg" name="Image18" width="19" height="17" border="0"></a> 
+</div>
+
+<div id="sectionTitle" style="position:absolute; width:278px; height:17px; z-index:4; left: 48px; top: 13px;"> 
+  <p class="sectionTitle">Section 9: Lesson Test</p>
+</div>
+<div id="LAudio" style="position:absolute; width:28px; height:24px; z-index:9; left: 761px; top: 17; visibility: visible;">
+	<img src="../System/audio_3.jpg" alt="Turns audio on" name="Image15" width="30" height="22" border="0">
+</div>
+
+<!-- Disable audio
+<div id="audioOn" style="position:absolute; width:28px; height:20px; z-index:3; left: 761px; top: 17px;"> 
+      <a href="#" onClick = "setCookie('audio', 0 );showResult()" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image14','','../System/audio2_1.jpg',1)"><img src="../System/audio2_0.jpg" alt="Turns audio off" name="Image14" width="30" height="22" border="0"></a>
+</div>
+<div id="LAudio" style="position:absolute; width:28px; height:24px; z-index:9; left: 761px; top: 17; visibility: hidden;">
+	<a href="#" onClick = "setCookie('audio', 1 );showResult()" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image15','','../System/audio_1.jpg',1)"><img src="../System/audio_0.jpg" alt="Turns audio on" name="Image15" width="30" height="22" border="0"></a>
+</div>
+
+<div id="audioObj" style="position:absolute; width:22px; height:17px; z-index:0; left: 1px; top: 551; visibility: hidden;">
+  <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" name="FAudio" width="22" height="17" id="FAudio">
+    <param name="movie" value="Audios/M01.swf">
+    <param name="quality" value="high">
+    <param name="LOOP" value="false">
+    <param name="PLAY" value="false">
+    <embed src="Audios/M01.swf" width="22" height="17" loop="false" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" play="false" name="FAudio" swliveconnect="true"></embed>
+  </object>
+</div>
+-->
+</body>
+</html>

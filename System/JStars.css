@@ -1,0 +1,84 @@
+.pageTitle {
+	font-family: Verdana;
+	font-size: 14px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: bold;
+	font-variant: normal;
+	color: #FFFFFF;
+}
+.Paragraph {
+	font-family: Verdana;
+	font-size: 12px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	color: #FFFFFF;
+}
+
+.section {
+	font-family: Verdana;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+.pageNumber {
+	font-family: Verdana;
+	font-size: 12px;
+	font-style: normal;
+	color: #FFFFFF;
+	line-height: normal;
+	font-weight: bold;
+}
+
+.menuItem {
+	font-family: Verdana;
+	font-size: 14px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	color: #FFFFFF;
+}
+.Prompt {
+
+	font-family: Verdana;
+	font-size: 9px;
+	color: #FFFFFF;
+}
+
+.sectionTitle {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: bold;
+	font-variant: normal;
+	color: #CCCCCC;
+}
+
+.popupLink {
+	font-family: Verdana;
+	font-size: 12px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	color: #FFFFFF;
+	cursor: hand;
+}
+
+.popupText {
+	font-family: Verdana;
+	font-size: 12px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	color: #FFFFFF;
+	background: #23283C; 
+	padding: 15px;
+	border: solid;
+	border-color: #D67B2C;
+	border-width: 1px;
+}

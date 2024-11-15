@@ -1,0 +1,114 @@
+.questionText {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	color: #FFFFFF;
+}
+
+.distracter {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	color: #FFFFFF;
+	cursor: hand;
+}
+
+.distracter_sel {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	color: #FFFF00;
+	cursor: hand;
+}
+
+.distracter_dis {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	color: #999999;
+	cursor: default;
+}
+
+.distracter_hlt {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	color: #FFFFFF;
+	cursor: default;
+}
+
+.Prompt {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	color: #FFFFFF;
+}
+
+.feedbackCorrect {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	color: #FFFFFF;
+	margin: 10px;
+}
+
+.feedbackIncorrect {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	color: #FFFFFF;
+	margin: 10px;
+}
+
+.feedbackBoxCorrect {
+	background-color: #000000; 
+	layer-background-color: #000000; 
+	border: 1px solid #72818A;
+}
+
+.feedbackBoxIncorrect {
+	background-color: #000000; 
+	layer-background-color: #000000; 
+	border: 1px solid #72818A;
+}
+
+.sectionTitle {
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: bold;
+	font-variant: normal;
+	color: #777590;
+}
+
+.reportText {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 18px;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	color: #FFFFFF;
+	margin: 20px;
+}
+
+.pageNumber {
+	font-family: Verdana, Arial;
+	font-size: 12px;
+	font-style: normal;
+	color: #FFFFFF;
+	line-height: normal;
+	font-weight: bold;
+}

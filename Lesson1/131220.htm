@@ -1,0 +1,500 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Lesson 1: Introduction to Joint STARS - Part 1</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<script language="JavaScript"></script>
+<script language="JavaScript" src="../scripts/behActions.js"></script>
+<script language="JavaScript" src="../scripts/behCourseBuilder.js"></script>
+<script language="JavaScript" src="../scripts/interactionClass.js"></script>
+<script language="JavaScript" src="../scripts/elemDragClass.js"></script>
+<script language="JavaScript" src="../scripts/behDragLayer.js"></script>
+
+<script language="JavaScript" type="text/JavaScript">
+<!--
+
+
+//prototype function
+function QuitIt(){
+	if (confirm("Are you sure you want to exit?") == true)
+		window.close()
+}
+function refresh()
+{
+location.reload()
+}
+
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+
+var nObject = 4;
+var nCorrect = 0;
+var nIncorrect = 0;
+var nMoved = 0;
+function movedCount() {
+	//change the number 6 to the number of drag/drop pairs.
+	//i is for drag object, and j is for target object.
+	//The object name in the G01.add('dragTarg', .....) must be Dragi, Targetj for this function to work.
+	//Following varible must be changed to match the number of movable objects for this interaction.
+	nIncorrect = 0;
+	nCorrect = 0;
+	nMoved = 0;
+	for (var i=1; i<=nObject; i++) {
+		matched = false
+		for (var j=1; j<=nObject; j++) {
+			//alert("i="+i+", j="+j+": " +(G01.e["Drag"+i].c["Target"+j].isCorrect && G01.e["Drag"+i].c["Target"+j].selected))
+			var thePair = G01.e["Drag"+i].c["Target"+j]
+			if (thePair.isCorrect && thePair.selected) {
+				nCorrect += 1;
+				matched = true;
+				break;
+			}
+			if (thePair.selected) nIncorrect += 1
+		}
+	}
+	nMoved = nCorrect + nIncorrect;
+	//alert("nMoved = " + nMoved );
+	return nMoved;
+}
+
+function moveIncorrectBack() {
+	//change the number 6 to the number of drag/drop pairs.
+	//i is for drag object, and j is for target object.
+	//The object name in the G01.add('dragTarg', .....) must be Dragi, Targetj for this function to work.
+	//Following varible must be changed to match the number of movable objects for this interaction.
+	nCorrect = 0;
+	for (var i=1; i<=nObject; i++) {
+		matched = false
+		for (var j=1; j<=nObject; j++) {
+			//alert("i="+i+", j="+j+": " +(G01.e["Drag"+i].c["Target"+j].isCorrect && G01.e["Drag"+i].c["Target"+j].selected))
+			var thePair = G01.e["Drag"+i].c["Target"+j]
+			if (thePair.isCorrect && thePair.selected) {
+				nCorrect += 1;
+				matched = true;
+				break;
+			}
+		}
+		if (!matched) {
+			oDrag = G01.e["Drag"+i];
+			oDrag.snapTo(oDrag.origPosX, oDrag.origPosY);
+		}
+	}
+}
+
+function moveToTargets() {
+	//It works this way, but is not complete and not used
+	document.all["G01Drag1"].style.top = document.all["G01Target1"].style.top -3;
+	document.all["G01Drag1"].style.left = document.all["G01Target1"].style.left
+}
+
+function displayFeedback(userTry) {
+	if ( movedCount() < nObject ) {
+		MM_resetInt('G01','reset','');	//reset interaction
+		MM_showHideLayers("fbFirstThing","","show");
+	} else if ( nCorrect == nObject ){
+		MM_showHideLayers("fbCorrect","","show","fbIncorrect","","hide");
+	} else {
+		if (userTry == 1) {
+			document.all["dynFeedback"].innerText = "Incorrect. You selected " + nCorrect + " of " + nObject + " correctly. Try again.";
+			MM_showHideLayers("fbIncorrect","","show","fbFirstThing","","hide");
+		} else
+			MM_showHideLayers("fbIncorrect2","","show","fbIncorrect","","hide");			
+	}
+}
+
+function hideFeedback() {
+	document.all["fbFirstThing"].style.visibility = "hidden"
+	document.all["fbIncorrect"].style.visibility = "hidden"
+	document.all["fbIncorrect2"].style.visibility = "hidden"
+}
+
+
+//-------------------------------------------------------------------
+var oGoto = window.createPopup();
+function gotoPopup()
+{
+    oGoto.document.body.innerHTML = oReferenceHTML.innerHTML; 
+	//the dimensions need to match that of scroll box layer
+	//the position is relative to btnGoto object
+    oGoto.show(-50, -211, 150, 200, btnGoto);
+}
+
+//-------------------------------------------------------------------
+//-->
+</script>
+
+<link rel="stylesheet" href="../System/Interaction.css" type="text/css">
+<link href="../System/JStars.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="#403F56" background="../System/background-main.jpg" link="#FDF543" vlink="#A79DDE" alink="#FED803" leftmargin="0" topmargin="0" onLoad="MM_initInteractions();MM_preloadImages('../System/glossary_2.jpg','../System/audio2_1.jpg','../System/help_1.jpg','../System/audio_1.jpg','../System/logout_2.jpg','../System/menu_2.jpg','../System/replay_2.jpg','System/back_2.jpg','../System/next_2.jpg','../System/goto_2.jpg')">
+
+<div id="fbCorrect" style="position:absolute; left:50; top:390; width:300px; height:50px; z-index:10; visibility: hidden;" class="feedbackBoxCorrect"> 
+  <div align="center" class="feedbackCorrect">Correct. You have matched the acronyms 
+    with the statements. Click Next to continue.</div>
+</div>
+<div id="fbIncorrect" style="position:absolute; left:50; top:390; width:300px; height:50px; z-index:10; visibility: hidden;" class="feedbackBoxIncorrect"> 
+  <div id="dynFeedback" align="center" class="feedbackIncorrect">Incorrect. You selected # of # correctly. Try again.</div>
+</div>
+<div id="fbIncorrect2" style="position:absolute; left:50; top:390; width:300px; height:50px; z-index:10; visibility: hidden;" class="feedbackBoxIncorrect"> 
+  <div align="center" class="feedbackIncorrect">
+    Incorrect. The correct answers are now shown. Click Next to continue.</div>
+</div>
+<div id="fbFirstThing" style="position:absolute; left:50; top:390; width:300px; height:50px; z-index:10; visibility: hidden;" class="feedbackBoxIncorrect"> 
+  <div align="center" class="feedbackIncorrect">You have not completed all of the selections. Try again.</div>
+</div>
+<div id="pageTitle" style="position:absolute; left:35px; top:65px; width:179px; height:20px; z-index:1" class="pageTitle">Self-Check
+  Question</div>
+<interaction name="Drag_ManyToMany01" object="G01" template="020_Drag and Drop/010_Drag_ManyToMany_04.agt" includesrc="interactionClass.js,elemDragClass.js,behDragLayer.js">
+<div id="G01Layer" style="position:absolute; left:120px; width:552px; height:31px; z-index:1; visibility:visible; top: 95;" name="G01Layer"> 
+  <span name="G01question" class="questionText">Which acronyms on the right describe 
+  the statements on the left?<br>
+</span></div>
+<div id="controlForm" style="position:absolute; left:150; width:50px; height:62px; z-index:1; visibility:visible; top: 392px;"> 
+  <form name="G01controls">
+    <input name="G01judge" type="image" onClick="MM_judgeInt('G01');return false;" onMouseOver="MM_swapImage('G01judge','','../System/done_over.jpg',1)" onMouseOut="MM_swapImgRestore()" src="../System/done.jpg" alt="Done" width="77" height="37">
+  </form>
+</div>
+<div id="G01Drag1" style="position:absolute; left:30; top:310; width:20px; height:15px; visibility: visible; z-index: 2;"> 
+  <img src="Images/drag_answ1.jpg" alt="Drag 1" name="G01Drag1Img" width="316" height="47" onClick="javascript:hideFeedback()"></div>
+<div id="G01Drag2" style="position:absolute; left:30; top:255; width:20px; height:15px; visibility: visible; z-index: 2;"> 
+  <img src="Images/drag_answ2.jpg" alt="Drag 2" name="G01Drag2Img" width="316" height="47" onClick="javascript:hideFeedback()"></div>
+<div id="G01Drag3" style="position:absolute; left:30; top:200; width:20px; height:15px; z-index: 2;"> 
+  <img src="Images/drag_answ3.jpg" alt="Drag 3" name="G01Drag3Img" width="316" height="47" onClick="javascript:hideFeedback()"></div>
+<div id="G01Drag4" style="position:absolute; left:30; top:145; width:20px; height:15px; z-index: 2;"> 
+  <img src="Images/drag_answ4.jpg" alt="Drag 4" name="G01Drag4Img" width="316" height="47" onClick="javascript:hideFeedback()"></div>
+<div id="G01Target1" style="position:absolute; left:430; top:130; width:20px; height:15px; visibility: visible"> 
+  <img src="Images/drop_SOTAS.jpg" alt="Target 1" name="G01Target1Img" width="330" height="84" border="0"></div>
+<div id="G01Target2" style="position:absolute; left:430; top:220; width:20px; height:15px; visibility: visible"> 
+  <img src="Images/drop_DARPA.jpg" alt="Target 2" name="G01Target2Img" width="330" height="84"></div>
+<div id="G01Target3" style="position:absolute; left:430; top:310; width:336px; height:40px; visibility: visible"> 
+  <img src="Images/drop_jointstars.jpg" alt="Target 3" name="G01Target3Img" width="330" height="84"></div>
+<div id="G01Target4" style="position:absolute; left:430; top:400; width:20px; height:15px; visibility: visible"> 
+  <img src="Images/drop_TAWDS.jpg" alt="Target 3" name="G01Target4Img" width="330" height="84"></div>
+<script language="JavaScript">
+<!--
+  // Copyright 1998,1999 Macromedia, Inc. All rights reserved.
+  function newG01() {
+    G01 = new MM_interaction('G01',0,1,1,null,0,2,0,'','','m','',0);
+    G01.add('drag','Drag1',null,1,0,1,0);
+    G01.add('drag','Drag2',null,1,0,1,0);
+    G01.add('drag','Drag3',null,1,0,1,0);
+    G01.add('drag','Drag4',null,1,0,1,0);
+    
+    G01.add('drag','Target1',null,0,1,1,0);
+    G01.add('drag','Target2',null,0,1,1,0);
+    G01.add('drag','Target3',null,0,1,1,0);
+    G01.add('drag','Target4',null,0,1,1,0);
+   
+    G01.add('dragTarg','Drag1','Target1',1,0,20,'','8:29',1);
+    G01.add('dragTarg','Drag1','Target2',0,0,20,'','8:29',1);
+    G01.add('dragTarg','Drag1','Target3',0,0,20,'','8:29',1);
+    G01.add('dragTarg','Drag1','Target4',0,0,20,'','8:29',1);
+    
+    G01.add('dragTarg','Drag2','Target1',0,0,20,'','8:29',1);
+    G01.add('dragTarg','Drag2','Target2',1,0,20,'','8:29',1);
+    G01.add('dragTarg','Drag2','Target3',0,0,20,'','8:29',1);
+    G01.add('dragTarg','Drag2','Target4',0,0,20,'','8:29',1);
+    
+    G01.add('dragTarg','Drag3','Target1',0,0,20,'','8:29',1);
+    G01.add('dragTarg','Drag3','Target2',0,0,20,'','8:29',1);
+    G01.add('dragTarg','Drag3','Target3',1,0,20,'','8:29',1);
+    G01.add('dragTarg','Drag3','Target4',0,0,20,'','8:29',1);
+   
+    G01.add('dragTarg','Drag4','Target1',0,0,20,'','8:29',1);
+    G01.add('dragTarg','Drag4','Target2',0,0,20,'','8:29',1);
+    G01.add('dragTarg','Drag4','Target3',0,0,20,'','8:29',1);
+    G01.add('dragTarg','Drag4','Target4',1,0,20,'','8:29',1);
+    
+   
+    G01.init();
+    G01.am('segm','Segment: Check Time_',1,1);
+    G01.am('cond','Time At Limit_','G01.timeAtLimit == true',0);
+    G01.am('actn','Popup Message','MM_popupMsg(\'You are out of time\')','pm');
+    G01.am('actn','Set Interaction Properties: Disable Interaction','MM_setIntProps(\'G01.setDisabled(true);\')','sp');
+    G01.am('end');
+    G01.am('segm','Segment: Correctness_',1,0);
+    G01.am('cond','Correct_','G01.correct == true',0);
+    G01.am('actn','Show-Hide Layers','MM_showHideLayers(\'fbCorrect\',\'\',\'show\',\'fbIncorrect\',\'\',\'hide\',\'fbIncorrect2\',\'\',\'hide\',\'fbFirstThing\',\'\',\'hide\')','');
+    G01.am('actn','Set Interaction Properties: Disable Interaction','MM_setIntProps(\'G01.setDisabled(true);\')','sp');
+    G01.am('end');
+    G01.am('cond','Incorrect_','G01.correct == (false)',0);
+    G01.am('cond','Tries at Limit_','G01.triesAtLimit == true',0);
+    G01.am('actn','Call JavaScript','MM_callJS(\'displayFeedback(2)\')','');
+    //G01.am('actn','Show-Hide Layers','MM_showHideLayers(\'fbCorrect\',\'\',\'hide\',\'fbIncorrect\',\'\',\'hide\',\'fbIncorrect2\',\'\',\'show\',\'fbFirstThing\',\'\',\'hide\')','');
+    G01.am('actn','Set Interaction Properties','MM_setIntProps(\'G01.e[\\\'Drag1\\\'].origPosX=438;G01.e[\\\'Drag1\\\'].origPosY=159;G01.e[\\\'Drag2\\\'].origPosX=438;G01.e[\\\'Drag2\\\'].origPosY=249;G01.e[\\\'Drag3\\\'].origPosX=438;G01.e[\\\'Drag3\\\'].origPosY=339;G01.e[\\\'Drag4\\\'].origPosX=438;G01.e[\\\'Drag4\\\'].origPosY=429;\')','');
+    G01.am('actn','Reset Interaction','MM_resetInt(\'G01\',\'reset\',\'\')','');
+    G01.am('actn','Set Interaction Properties: Disable Interaction','MM_setIntProps(\'G01.setDisabled(true);\')','sp');
+    G01.am('end');
+    G01.am('cond','else','true',0);
+    G01.am('actn','Call JavaScript','MM_callJS(\'moveIncorrectBack ()\')','');
+    G01.am('actn','Call JavaScript','MM_callJS(\'displayFeedback(1)\')','');
+    //G01.am('actn','Show-Hide Layers','MM_showHideLayers(\'fbCorrect\',\'\',\'hide\',\'fbIncorrect\',\'\',\'show\',\'fbIncorrect2\',\'\',\'hide\',\'fbFirstThing\',\'\',\'hide\')','');
+    G01.am('end');
+    G01.am('end');
+    G01.am('cond','Unknown Response_','G01.knownResponse == false',0);
+    G01.am('actn','Show-Hide Layers','MM_showHideLayers(\'fbCorrect\',\'\',\'hide\',\'fbIncorrect\',\'\',\'hide\',\'fbIncorrect2\',\'\',\'hide\',\'fbFirstThing\',\'\',\'show\')','');
+    G01.am('actn','Reset Interaction','MM_resetInt(\'G01\',\'reset\',\'\')','');
+    //G01.am('actn','Reset Interaction','MM_resetInt(\'G01\',\'resetElems\',\'\')','');
+    G01.am('end');
+  }
+  if (window.newG01 == null) window.newG01 = newG01;
+  if (!window.MM_initIntFns) window.MM_initIntFns = ''; window.MM_initIntFns += 'newG01();';
+//-->
+</script>
+<cbi-select object="G01"></interaction> 
+<!-- Shockwave Flash -->
+<div id="LnavBar" style="position:absolute; width:455px; height:36px; z-index:1; left: 326; top: 515;"> 
+  <table width="456" height="24" border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td width="69" align="center" valign="top"><a href="#" onClick="QuitIt()" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('logout','','../System/logout_2.jpg',1)"><img src="../System/logout_0.jpg" alt="Log out the lesson" name="logout" width="57" height="24" border="0"></a> 
+      </td>
+      <td width="70" align="center" valign="top"> <a href="#" onClick="MM_openBrWindow('../Glossary.htm','','scrollbars=yes,width=800,height=550')" 
+												onMouseOver="MM_swapImage('glossary','','../System/glossary_2.jpg',1)" 
+	  											onMouseOut="MM_swapImgRestore()"><img src="../System/glossary_0.jpg" alt="Glossary" name="glossary" width="57" height="24" border="0" id="glossary"></a></td>
+      <td width="70" align="center" valign="top"><img src="../System/remarks_3.jpg" name="remark" width="57" height="24" border="0" id="remark"></td>
+      <td width="70" align="center" valign="top"><span id="btnGoto"><a href="#" onClick="gotoPopup()" onMouseOver="MM_swapImage('goto','','../System/goto_2.jpg',1)" onMouseOut="MM_swapImgRestore()"><img src="../System/goto_0.jpg" alt="Go to a page" name="goto" width="57" height="24" border="0"></a></span></td>
+      <td width="70" align="center" valign="top"><a href="../LessonMenu01.htm" 
+	  	onMouseOver="MM_swapImage('Menu','','../System/menu_2.jpg',1)" onMouseOut="MM_swapImgRestore()"> 
+        <img src="../System/menu_0.jpg" alt="Go to Main Menu" name="Menu" width="57" height="24" border="0"></a></td>
+      <td width="70" align="center" valign="top"><a href="131210.htm" onMouseOver="MM_swapImage('Prev','','../System/back_2.jpg',1)" onMouseOut="MM_swapImgRestore()"><img src="../System/back_0.jpg" alt="Go to previouse page" name="Prev" width="57" height="24" border="0"></a></td>
+      <td width="75" align="center" valign="top"><a href="#" onClick="refresh()" onMouseOver="MM_swapImage('replay','','../System/replay_2.jpg',1)" onMouseOut="MM_swapImgRestore()"><img src="../System/replay_0.jpg" alt="Replay the current page" name="replay" width="57" height="24" border="0" id="replay"></a></td>
+      <td width="66" align="center" valign="top"><a href="131230.htm" onMouseOver="MM_swapImage('Next','','../System/next_2.jpg',1)" onMouseOut="MM_swapImgRestore()"><img src="../System/next_0.jpg" alt="Go to next page" name="Next" width="57" height="24" border="0" id="Next"></a></td>
+    </tr>
+  </table>
+</div>
+<div id="Lprompt" style="position:absolute; width:270px; height:30px; z-index:2; left: 4px; top: 501px;"> 
+  <div align="left"></div>
+  <table width="268" border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td width="27" height="38" align="center" valign="middle" class="mapTopic"><a href="#" onClick="MM_openBrWindow('../Help.htm','','width=800,height=550')" onMouseOver="MM_swapImage('Image18','','../System/help_1.jpg',1)" onMouseOut="MM_swapImgRestore()"><img src="../System/help_0.jpg" name="Image18" width="19" height="17" border="0"></a></td>
+      <td id="prompt" width="333" align="center" valign="middle" class="Prompt">Drag 
+        each statement and drop it next to the correct acronym, then click DONE.</td>
+    </tr>
+  </table>
+</div>
+<div id="LPageNum" style="position:absolute; width:122; height:14px; z-index:3; left: 667; top: 17px;" class="pageNumber"> 
+  <table width="130" border="0" cellspacing="0" cellpadding="0">
+    <tr> 
+      <td width="118" class="pageNumber">Page 22 of 66</td>
+      <td width="22"><img src="../System/audio_3.jpg"  name="Image15" width="30" height="22" border="0"></td>
+    </tr>
+  </table>
+</div>
+<div id="sectionTitle" style="position:absolute; width:418px; height:31px; z-index:4; left: 46px; top: 14px; visibility: visible;"> 
+  <p class="sectionTitle">Section 3: Developmental History and Role of Joint STARS</p>
+</div>
+<!-- Lesson Reference -->
+<div id="oReferenceHTML" style="position:absolute; top:0; left:800;display:none;"> 
+  <!-- Scroll box -->
+  <div style="position:absolute; top:0; left:0; overflow:scroll; overflow-x:hidden; width:150; height:200; scrollbar-base-color:#353349; border-bottom:2px solid black; SCROLLBAR-HIGHLIGHT-COLOR: #504C6D; SCROLLBAR-ARROW-COLOR: white;" > 
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='110010.htm'">Page 1</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='110020.htm'">Page 2</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='110030.htm'">Page 3</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='120040.htm'">Page 4</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='131050.htm'">Page 5</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='131060.htm'">Page 6</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='131070.htm'">Page 7</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='131080.htm'">Page 8</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='131090.htm'">Page 9</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='131100.htm'">Page 10</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='131110.htm'">Page 11</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='131120.htm'">Page 12</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='131130.htm'">Page 13</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='131140.htm'">Page 14</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='131150.htm'">Page 15</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='131160.htm'">Page 16</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='131170.htm'">Page 17</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='131180.htm'">Page 18</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='131190.htm'">Page 19</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='131200.htm'">Page 20</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='131210.htm'">Page 21</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='131220.htm'">Page 22</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='131230.htm'">Page 23</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='141240.htm'">Page 24</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='141250.htm'">Page 25</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='141260.htm'">Page 26</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='141270.htm'">Page 27</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='141280.htm'">Page 28</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='141290.htm'">Page 29</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='141300.htm'">Page 30</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='141310.htm'">Page 31</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='141320.htm'">Page 32</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='141330.htm'">Page 33</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='141340.htm'">Page 34</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='141350.htm'">Page 35</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='141360.htm'">Page 36</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='151370.htm'">Page 37</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='151380.htm'">Page 38</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='151390.htm'">Page 39</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='151400.htm'">Page 40</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='151410.htm'">Page 41</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='161420.htm'">Page 42</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='161430.htm'">Page 43</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='161440.htm'">Page 44</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='161450.htm'">Page 45</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='161460.htm'">Page 46</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='161470.htm'">Page 47</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='161480.htm'">Page 48</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='171490.htm'">Page 49</span> </div>
+    <div onMouseOver="this.style.color='#FFD660'" 
+         onMouseOut="this.style.color='#FFFFFF'" 
+         style="color:#FFFFFF; font-family:verdana; font-size:70%; height:25px; background:#504C6D; border:1px solid black; padding:3px; padding-left:20px; cursor:hand;"> 
+      <span onClick="parent.location.href='181500.htm'">Page 50</span> </div>
+  </div>
+</div>
+<!-- End of Lesson Reference -->
+</body>
+</html>
+

@@ -1,0 +1,17 @@
+<html>
+<head>
+<title></title>
+</head>
+
+<body bgColor="#333366">
+<br>
+<font color="#333366">
+<script language="JavaScript">
+	document.title = opener.userName;
+	document.write (opener.userScore);
+	document.execCommand("SaveAs", "false", "A:\\"+opener.lesson+".txt")
+	self.close();
+</script>
+</font>
+</body>
+</html>

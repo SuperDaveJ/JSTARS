@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>JSTARS Login</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="../System/mainMenu.css" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../JStars.cod"></script>
+<script language="JavaScript" type="text/JavaScript">
+<!--
+
+function submitForm() {
+	//This function has to work when either ENTER key is pressed or the Submit button is clicked.
+	var fName = document.login.fName.value;
+	var lName = document.login.lName.value;
+	var accessCode = document.login.password.value;
+	if (fName == "" && lName == "" && accessCode == "") {
+		alert("You must enter your full name or instructor password.\rTry again.");
+		//return false;
+	} else if ( accessCode != "" && ((fName == "" && lName != "") || (fName != "" && lName == "") || (fName != "" && lName != "")) ) {
+		alert("You enter student name or instructor password, but not both.\rTry again.");
+		//return false;
+	} else if ( accessCode == "" && ((fName == "" && lName != "") || (fName != "" && lName == "")) ) {
+		alert("You must enter your first name and last name.\rTry again.");
+		//return false;
+	} else if (fName == "" && lName == "" && accessCode != "") {
+		if (accessCode != password) {
+			alert("You password is incorrect.\rTry again.");
+			//return false;
+		} else {
+			window.location.href = "index.htm?user=Instructor"
+		}
+	} else if (fName != "" && lName != "" && accessCode == "") {
+		fullName = escape(fName + " " + lName);
+		window.location.href = "index.htm?user=" + fullName;
+	} else {
+		alert("User information incorrect.\Try again.")
+	}
+}
+
+</script>
+</head>
+
+<body background="../system/shell_a0.jpg">
+<form name="login" target="_self">
+<P>&nbsp;</P>
+<table width="60%" align="center" border="0" cellspacing="0" cellpadding="3" class="LessonMenu">
+  <tr>
+    <td colspan="2">Please login properly.  
+	If you are a student, please enter your first name and last name, then click the Submit button.
+	If you are an instructor, please enter your password, then click the Submit button.
+	</td>
+  </tr>
+  <tr>
+    <td colspan="2">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="2" class="CourseMenu">Student:</td>
+  </tr>
+  <tr>
+    <td align="right">First Name:</td>
+    <td><input name="fName" type="text" size="20"></td>
+  </tr>
+  <tr>
+    <td align="right">Last Name:</td>
+    <td><input name="lName" type="text" size="20"></td>
+  </tr>
+  <tr>
+    <td colspan="2">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="2" class="CourseMenu">Instructor:</td>
+  </tr>
+  <tr>
+    <td align="right">Password:</td>
+    <td><input name="password" type="password" size="20"></td>
+  </tr>
+  <tr>
+    <td colspan="2">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><input name="submit" type="button" value="Submit" onClick="submitForm()"></td>
+  </tr>
+</table>
+
+</form>
+</body>
+</html>
